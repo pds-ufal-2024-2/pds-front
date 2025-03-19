@@ -10,8 +10,8 @@ const config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)"],
-        mono: ["var(--font-mono)"],
+        'inter': ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        'poppins': ['var(--font-poppins)', 'sans-serif'],
       },
     },
   },
