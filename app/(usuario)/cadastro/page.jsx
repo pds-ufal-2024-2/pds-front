@@ -9,6 +9,8 @@ import React from "react";
 import { Link } from "@heroui/link";
 
 export default function Cadastro() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [action, setAction] = React.useState(null);
   const [isSelected, setIsSelected] = React.useState(false);
 
   const onSubmit = (e) => {
