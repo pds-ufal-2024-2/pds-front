@@ -83,6 +83,8 @@ export default function MapPage() {
 
   const nextStep = () => {
     setStep((prevStep) => prevStep + 1);
+    const step1btn = document.getElementById("step1btn");
+    step1btn.style.display = "none";
     if (localizacao === "") {
       setLocalizacao(userPosition);
     }
@@ -100,7 +102,7 @@ export default function MapPage() {
 
   return (
     <div className="overflow-y-hidden relative">
-      <header className="w-full flex flex-col items-center justify-center h-[20vh] min-h-[138px]">
+      <header className="w-full flex flex-col items-center justify-center h-auto min-h-[138px]">
         <h1 className="font-bold my-4">RELATAR</h1>
         <HorizontalSteps
           currentStep={step}
@@ -111,13 +113,21 @@ export default function MapPage() {
             { title: "Prévia" },
           ]}
         />
+        <div className="flex mt-4 justify-between px-10 pb-5 w-full" id="step1btn">
+        <Button color="secondary" variant="solid" onPress={mapHide}>
+            Inserir manualmente
+          </Button>
+          <Button color="primary" onPress={nextStep}>
+            Confirmar
+          </Button>
+        </div>
       </header>
       <div className="h-[80vh]" id="step1">
         <div
           id="map-container"
           style={{ width: "100%", zIndex: "1", height: "100vh" }}
         />
-        <div
+        {/* <div
           className="flex justify-between absolute bottom-10 px-10 z-10 w-full"
           style={{
             paddingBottom: "calc(env(safe-area-inset-bottom) + 10px)", // Adiciona espaçamento seguro
@@ -129,7 +139,7 @@ export default function MapPage() {
           <Button color="primary" onPress={nextStep}>
             Confirmar
           </Button>
-        </div>
+        </div> */}
       </div>
       {step === 1 && (
         <div className="w-full h-full flex items-center mt-10 justify-center">
