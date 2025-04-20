@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import { Inter, Poppins } from "next/font/google";
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
@@ -49,7 +49,12 @@ export default function RootLayout({ children }) {
       className={`${inter.variable} ${poppins.variable}`}
       lang="pt-br"
     >
-      <head />
+      <head>
+        <meta
+          content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport"
+        />
+      </head>
       <body
         className={clsx("min-h-screen bg-background font-sans antialiased")}
       >
