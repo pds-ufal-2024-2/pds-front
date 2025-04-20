@@ -1,3 +1,6 @@
+# InfraZen
+Repositório criado para o Frontend de Projeto e Desenvolvimento de Sistemas
+
 # Next.js & HeroUI Template
 
 This is a template for creating applications using Next.js 14 (app directory) and HeroUI (v2).
