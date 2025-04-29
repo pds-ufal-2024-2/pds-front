@@ -66,8 +66,8 @@ export default function TabelaSolicitacoes() {
   <div className="w-full flex justify-between">
     {/* tabela de solicitacoes */}
     {/* <div className="flex container flex-col w-3/4 bg-black"> */}
-    <div className="flex container w-full flex-row gap-4">
-      <div className="flex text-sm">
+    <div className="flex flex-col container w-full gap-4">
+      <div className="flex flex-col text-sm">
         {/* <div className="flex flex-col"> */}
         <div className="flex flex-col w-3/5">
           <table className="table-auto border-collapse border border-purple-200">
