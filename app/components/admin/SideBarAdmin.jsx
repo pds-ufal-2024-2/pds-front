@@ -14,7 +14,7 @@ import {
 const navItems = [
   { label: 'Urgências', icon: ExclamationTriangleIcon, href: '/admin/urgencias' },
   { label: 'Processos e Demandas', icon: DocumentMagnifyingGlassIcon, href: '/admin/processos' },
-  { label: 'Relatório', icon: ChartBarIcon, href: '/admin/relatorio' },
+  { label: 'Relatórios', icon: ChartBarIcon, href: '/admin/relatorios' },
   { label: 'Órgãos', icon: BuildingOffice2Icon, href: '/admin/orgaos' },
   { label: 'Comunidade', icon: UsersIcon, href: '/admin/comunidade' },
 ];
