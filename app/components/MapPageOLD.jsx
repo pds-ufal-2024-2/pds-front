@@ -8,8 +8,6 @@ import { Select, SelectItem } from "@heroui/select";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import HorizontalSteps from "./horizontal-steps";
-
 const customIcon = L.divIcon({
   html: `
     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24"><g fill="red"><circle cx="12" cy="8.143" r="2.5" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.72s" dur="0.18s" values="0;1"/></circle><path d="M12 18c0 0 0 0 0 0c0 0 0 0 0 0l0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0l0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0Z"><animate fill="freeze" attributeName="d" begin="0.9s" dur="0.24s" values="M12 18c0 0 0 0 0 0l0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0c0 0 0 0 0 0l0 0c0 0 0 0 0 0c0 0 0 0 0 0Z;M12 21C15.3 21 18 19.9 18 18.5C18 17.8 17.3 17.2 16.2 16.7L16.8 15.8C18.8 16.6 20 17.7 20 19C20 21.2 16.4 23 12 23C7.6 23 4 21.2 4 19C4 17.7 5.2 16.6 7.1 15.8L7.7 16.7C6.7 17.2 6 17.8 6 18.5C6 19.9 8.7 21 12 21z"/></path></g><path fill="red" stroke="red" stroke-dasharray="40" stroke-dashoffset="40" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18c0 0 -5.14 -6 -5.14 -9.86c0 -2.84 2.3 -5.14 5.14 -5.14c2.84 0 5.14 2.3 5.14 5.14c0 3.86 -5.14 9.86 -5.14 9.86Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="40;0"/></path></svg>
@@ -140,34 +138,38 @@ export default function MapPage() {
 
   const handleSubmit = () => {
     // event.preventDefault();
-  
+
     // Coleta os dados do primeiro formulário
     const form1 = document.getElementById("form1");
 
     if (!form1 || !(form1 instanceof HTMLFormElement)) {
-      console.error("Formulário 1 não encontrado ou não é um elemento HTMLFormElement.");
+      console.error(
+        "Formulário 1 não encontrado ou não é um elemento HTMLFormElement."
+      );
 
       return;
     }
     const formData1 = new FormData(form1);
     const data1 = Object.fromEntries(formData1.entries());
-  
+
     // Coleta os dados do segundo formulário
     const form2 = document.getElementById("form2");
 
     if (!form2 || !(form2 instanceof HTMLFormElement)) {
-      console.error("Formulário 2 não encontrado ou não é um elemento HTMLFormElement.");
+      console.error(
+        "Formulário 2 não encontrado ou não é um elemento HTMLFormElement."
+      );
 
       return;
     }
     const formData2 = new FormData(form2);
     const data2 = Object.fromEntries(formData2.entries());
-  
+
     // Combina os dados dos dois formulários
     const combinedData = { ...data1, ...data2 };
-  
+
     console.log("Dados combinados:", combinedData);
-  
+
     // Aqui você pode enviar os dados combinados para o backend
     // fetch('/api/submit', {
     //   method: 'POST',
@@ -177,149 +179,20 @@ export default function MapPage() {
   };
 
   return (
-    <div className="overflow-y-hidden relative h-screen">
-      <header className="w-full flex flex-col items-center justify-center h-auto z-10">
-        <h1 className="font-bold my-4">RELATAR</h1>
-        <HorizontalSteps
-          currentStep={step}
-          steps={[
-            { title: "Localização" },
-            { title: "Descrição" },
-            { title: "Prévia" },
-          ]}
+    <div className="h-full">
+      <div
+        className="mt-20"
+        id="step1"
+        style={{
+          height: `calc(100vh - 480px)`,
+        }}
+        
+      >
+        <div
+          id="map-container"
+          style={{ width: "100%", height: "55%" }}
         />
-        {userPosition && (
-          <div className="text-center max-w-[90vw] py-4">
-            <p>Você está agora no local do problema encontrado?</p>
-            <div className="flex w-full gap-10">
-              <Button
-                className="w-full"
-                color="danger"
-                variant="flat"
-                onPress={resetaPosicao}
-              >
-                NÃO
-              </Button>
-              <Button className="w-full" color="primary">
-                SIM
-              </Button>
-            </div>
-          </div>
-        )}
-      </header>
-      {step === 0 && (
-        <>
-          <div className="h-[80vh]" id="step1">
-            <div
-              id="map-container"
-              style={{ width: "100%", zIndex: "1", height: "100%" }}
-            />
-          </div>
-          <div className="w-full flex justify-center mt-8 items-center flex-col text-center">
-            <h3 className="w-[90vw] mb-4">
-              Informe o endereço do problema que você deseja relatar
-            </h3>
-            <Form
-              className="w-full flex flex-col items-center justify-center gap-5"
-              id="form1" // Adicione um ID único
-            >
-              <Input
-                isRequired
-                className="max-w-[90%]"
-                labelPlacement="outside"
-                name="rua"
-                placeholder="Digite o nome da rua"
-              />
-              <Input
-                isRequired
-                className="max-w-[90%]"
-                labelPlacement="outside"
-                name="numero"
-                placeholder="Digite o número"
-              />
-              <Input
-                className="max-w-[90%]"
-                labelPlacement="outside"
-                name="complemento"
-                placeholder="Apartamento, bloco, etc."
-              />
-              <Input
-                isRequired
-                className="max-w-[90%]"
-                labelPlacement="outside"
-                name="bairro"
-                placeholder="Digite o bairro"
-              />
-              <Input
-                className="max-w-[90%]"
-                labelPlacement="outside"
-                name="cep"
-                placeholder="CEP (Deixe vazio se não souber)"
-              />
-              <Button
-  className="w-full max-w-[90vw] mt-4"
-  color="primary"
-onPress={nextStep}
->
-  Enviar
-</Button>
-            </Form>
-          </div>
-        </>
-      )}
-      {step === 1 && (
-        <div className="w-full flex justify-center mt-8 items-center flex-col text-center">
-          <h3 className="w-[90vw] mb-4">
-            Selecione a categoria que mais representa o problema encontrado
-          </h3>
-          <Form
-            className="w-full flex flex-col items-center justify-center gap-5"
-            id="form2"
-          >
-            <Select
-              className="max-w-xs"
-              label="Selecione uma categoria"
-              name="categoria"
-            >
-              {problemas.map((problema) => (
-                <SelectItem key={problema.key} value={problema.key}>
-                  {problema.label}
-                </SelectItem>
-              ))}
-            </Select>
-            <Input
-              isRequired
-              className="max-w-[90%]"
-              labelPlacement="outside"
-              name="problema"
-              placeholder="Digite qual o problema"
-            />
-            <Textarea
-              className="max-w-[90%]"
-              minRows={4}
-              name="descricao"
-              placeholder="Insira uma descrição sobre o problema"
-            />
-            <Button
-              className="w-full max-w-[90vw] mt-4"
-              color="primary"
-              onPress={handleSubmit}
-            >
-              Enviar
-            </Button>
-          </Form>
-        </div>
-      )}
-      {step === 2 && (
-        <div className="w-full h-full flex items-center mt-10 justify-center">
-          <h2>Descreva o problema</h2>
-        </div>
-      )}
-      {step === 3 && (
-        <div className="w-full h-full flex items-center mt-10 justify-center">
-          <h2>Prévia do relato</h2>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
