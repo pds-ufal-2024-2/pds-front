@@ -12,10 +12,12 @@ import {
   Checkbox,
   Link,
 } from "@heroui/react";
+import { useRouter } from "next/navigation";
 
 import CardPrevia from "./CardPrevia";
 import ImageInput from "./ImageInput";
 import RowSteps from "./row-steps";
+
 // import Link from "next/link";
 
 export const problemas = [
@@ -51,6 +53,7 @@ export default function MultiStepForm() {
     data: new Date().toISOString().split("T")[0],
     email: "",
   });
+  const router = useRouter();
 
   const isStep0Valid = () => {
     const { bairro, rua, numeroCasa, pontoReferencia } = formData;
@@ -101,6 +104,7 @@ export default function MultiStepForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Dados do formulário:", formData);
+    router.push("/sucesso");
   };
 
   const renderStep = () => {
@@ -108,7 +112,7 @@ export default function MultiStepForm() {
       case 0:
         return (
           <div className="w-full flex justify-center">
-            <div className="max-w-[90%] w-full flex flex-col justify-center">
+            <div className="max-w-[90%] md:max-w-[600px] w-full flex flex-col justify-center">
               <h2 className="text-center mb-4">
                 Preencha o formulário com as informações do local onde o
                 problema foi encontrado
@@ -166,7 +170,7 @@ export default function MultiStepForm() {
       case 1:
         return (
           <div className="w-full flex justify-center">
-            <div className="max-w-[90%] w-full flex flex-col justify-center">
+            <div className="max-w-[90%] md:max-w-[600px] w-full flex flex-col justify-center">
               <h2 className="text-center mb-4">
                 Categorize e descreva o problema encontrado
               </h2>
@@ -234,62 +238,62 @@ export default function MultiStepForm() {
             <div className="max-w-[500px] w-[90%] flex flex-col justify-center">
               <h2 className="text-center mb-4">Prévia da sua solicitação</h2>
               <div className="flex flex-col items-center gap-4">
-          <CardPrevia
-            categoria={formData.categoria}
-            descricao={formData.descricao}
-            imagem={formData.imagens[0]}
-          />
-          <div className="w-full items-start gap-2 flex flex-col">
-            <div className="flex gap-2">
-              <Checkbox
-                color="primary"
-                isSelected={queroEmails}
-                rounded="full"
-                onChange={() => setQueroEmails(!queroEmails)}
-              />
-              <p>
-                Desejo receber e-mails sobre o andamento da minha
-                solicitação
-              </p>
-            </div>
-            {queroEmails && (
-              <Input
-                className="mb-4"
-                label="Insira seu email"
-                name="email"
-                type="email"
-                value={formData.email}
-                variant="bordered"
-                onChange={handleChange}
-              />
-            )}
-            <div className="flex gap-2">
-              <Checkbox
-                color="primary"
-                isSelected={isDeclared}
-                rounded="full"
-                onChange={() => setIsDeclared(!isDeclared)}
-              />
-              <div>
-                Declaro que li e concordo com o{" "}
-                <Link color="primary" href="/termo">
-            Termo de Responsabilidade
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-full justify-between mt-4">
-            <Button color="primary" variant="bordered" onPress={prevStep}>
-              Voltar
-            </Button>
-            <Button
-              color="primary"
-              isDisabled={!isDeclared}
-              type="submit"
-            >
-              Enviar solicitação
-            </Button>
-          </div>
+                <CardPrevia
+                  categoria={formData.categoria}
+                  descricao={formData.descricao}
+                  imagem={formData.imagens[0]}
+                />
+                <div className="w-full items-start gap-2 flex flex-col">
+                  <div className="flex gap-2">
+                    <Checkbox
+                      color="primary"
+                      isSelected={queroEmails}
+                      rounded="full"
+                      onChange={() => setQueroEmails(!queroEmails)}
+                    />
+                    <p>
+                      Desejo receber e-mails sobre o andamento da minha
+                      solicitação
+                    </p>
+                  </div>
+                  {queroEmails && (
+                    <Input
+                      className="mb-4"
+                      label="Insira seu email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      variant="bordered"
+                      onChange={handleChange}
+                    />
+                  )}
+                  <div className="flex gap-2">
+                    <Checkbox
+                      color="primary"
+                      isSelected={isDeclared}
+                      rounded="full"
+                      onChange={() => setIsDeclared(!isDeclared)}
+                    />
+                    <div>
+                      Declaro que li e concordo com o{" "}
+                      <Link color="primary" href="/termo">
+                        Termo de Responsabilidade
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex w-full justify-between mt-4">
+                  <Button color="primary" variant="bordered" onPress={prevStep}>
+                    Voltar
+                  </Button>
+                  <Button
+                    color="primary"
+                    isDisabled={!isDeclared}
+                    type="submit"
+                  >
+                    Enviar solicitação
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
