@@ -1,12 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import {
+  ResponsiveContainer,
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
   Cell,
 } from 'recharts';
 
@@ -20,9 +21,14 @@ const data = [
   { bairro: 'FAROL', casos: 3 },
 ];
 
-const destaque = 'PAJUÇARA';
+export default function GraficoCasos({ onSelectBairro }) {
+  const [bairroSelecionado, setBairroSelecionado] = useState('PAJUÇARA');
 
-export default function GraficoCasos() {
+  const handleClick = (entry) => {
+    setBairroSelecionado(entry.bairro);
+    onSelectBairro(entry.bairro);
+  };
+
   return (
     <div className="w-full h-[350px] p-4">
       <h2 className="text-center font-bold text-lg mb-4">Casos diários por bairro</h2>
@@ -54,9 +60,11 @@ export default function GraficoCasos() {
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
+                cursor="pointer"
                 fill={
-                  entry.bairro === destaque ? '#000000' : '#9333ea' // roxo: purple-600
+                  entry.bairro === bairroSelecionado ? '#000000' : '#9333ea'
                 }
+                onClick={() => handleClick(entry)}
               />
             ))}
           </Bar>
