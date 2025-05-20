@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from '@/services/api';
 import { Button, Spinner } from "@heroui/react";
+import Cookies from 'js-cookie';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 export default function LoginPage() {
@@ -26,7 +27,9 @@ export default function LoginPage() {
       });
       console.log("Login bem-sucedido:", res.data);
       localStorage.setItem("token", res.data.access_token);
+      Cookies.set('token', res.data.access_token);
       router.push("/admin/urgencias");
+      console.log("redirecionando para /admin/urgencias");
     } catch (err) {
       if (err.response?.status === 422) {
         setErro("E-mail ou senha inválidos.");

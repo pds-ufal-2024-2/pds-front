@@ -6,7 +6,7 @@ import GraficoPendentesRelatorio from "../../../components/admin/graficoPendente
 export default function AdminRelatorios() {
     
   return (
-    <div>
+    <div className="flex flex-col gap-4 w-full h-full p-4">
         <div className="flex flex-col gap-4 w-full items-center">
             <TabelaRelatorios/>
         </div>
@@ -17,6 +17,13 @@ export default function AdminRelatorios() {
           <div className="w-1/2">
             <GraficoPendentesRelatorio />
           </div>
+        </div>
+        <div className="w-1/2 flex items-center mt-6">
+          <button>
+            <a href="/admin/relatorios/download" className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+              Baixar Relatório
+            </a>
+          </button>
         </div>
     </div>
   );
