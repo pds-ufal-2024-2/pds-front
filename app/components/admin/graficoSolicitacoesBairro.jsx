@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -10,28 +10,52 @@ import {
   Tooltip,
   Cell,
 } from 'recharts';
-
-const data = [
-  { bairro: 'CRUZ DAS ALMAS', casos: 12 },
-  { bairro: 'MANGABEIRAS', casos: 17 },
-  { bairro: 'CIDADE UNIVERSITÁRIA', casos: 23 },
-  { bairro: 'PAJUÇARA', casos: 20 },
-  { bairro: 'SANTA LUCIA', casos: 19 },
-  { bairro: 'CANAÃ', casos: 6 },
-  { bairro: 'FAROL', casos: 3 },
-];
+import api from '@/services/api';
 
 export default function GraficoCasos({ onSelectBairro }) {
-  const [bairroSelecionado, setBairroSelecionado] = useState('PAJUÇARA');
+  const [bairroSelecionado, setBairroSelecionado] = useState('');
+  const [data, setData] = useState([]);
 
   const handleClick = (entry) => {
     setBairroSelecionado(entry.bairro);
     onSelectBairro(entry.bairro);
   };
 
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await api.get("incidents");
+        const incidentes = res.data;
+
+        // Agrupar por bairro
+        const agrupado = incidentes.reduce((acc, incidente) => {
+          const bairro = incidente.bairro || 'SEM BAIRRO';
+          acc[bairro] = (acc[bairro] || 0) + 1;
+          return acc;
+        }, {});
+
+        // Converter para array do gráfico
+        const formatado = Object.entries(agrupado).map(([bairro, casos]) => ({
+          bairro,
+          casos,
+        }));
+
+        setData(formatado);
+        if (formatado.length > 0) {
+          setBairroSelecionado(formatado[0].bairro);
+          onSelectBairro(formatado[0].bairro);
+        }
+      } catch (err) {
+        console.error('Erro ao buscar incidentes:', err);
+      }
+    }
+
+    fetchData();
+  }, [onSelectBairro]);
+
   return (
     <div className="w-full h-[350px] p-4">
-      <h2 className="text-center font-bold text-lg mb-4">Casos diários por bairro</h2>
+      <h2 className="text-center font-bold text-lg mb-4">Casos por bairro</h2>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <XAxis
@@ -61,9 +85,7 @@ export default function GraficoCasos({ onSelectBairro }) {
               <Cell
                 key={`cell-${index}`}
                 cursor="pointer"
-                fill={
-                  entry.bairro === bairroSelecionado ? '#000000' : '#9333ea'
-                }
+                fill={entry.bairro === bairroSelecionado ? '#000000' : '#9333ea'}
                 onClick={() => handleClick(entry)}
               />
             ))}

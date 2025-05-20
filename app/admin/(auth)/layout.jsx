@@ -1,6 +1,5 @@
-import React from 'react'
-import SidebarAdmin from '../components/admin/SideBarAdmin'
-import TopbarAdmin from '../components/admin/TopBarAdmin'
+import SidebarAdmin from '../../components/admin/SideBarAdmin'
+import TopbarAdmin from '../../components/admin/TopBarAdmin'
 
 export default function AdminLayout({ children }) {
   return (

@@ -1,60 +1,44 @@
-import {
-    PieChart,
-    Pie,
-    Cell,
-  } from 'recharts';  
+'use client';
+
+import { useEffect, useState } from 'react';
+import { PieChart, Pie, Cell } from 'recharts';
+import api from '@/services/api';
 
 const COLORS = ['#9333ea', '#1e40af', '#ef4444'];
 
-const mockData = {
-    'CIDADE UNIVERSITÁRIA': {
-        total: 23,
-        solucionados: 0.6,
-        pendentesComuns: 0.4,
-        pendentesUrgentes: 0.2,
-    },
-    'CRUZ DAS ALMAS': {
-        total: 12,
-        solucionados: 0.5,
-        pendentesComuns: 0.3,
-        pendentesUrgentes: 0.2,
-    },
-    'MANGABEIRAS': {
-        total: 17,
-        solucionados: 0.4,
-        pendentesComuns: 0.4,
-        pendentesUrgentes: 0.2,
-    },
-    'PAJUÇARA': {
-        total: 20,
-        solucionados: 0.7,
-        pendentesComuns: 0.2,
-        pendentesUrgentes: 0.1,
-    },
-    'SANTA LUCIA': {
-        total: 19,
-        solucionados: 0.3,
-        pendentesComuns: 0.5,
-        pendentesUrgentes: 0.2,
-    },
-    'CANAÃ': {
-        total: 6,
-        solucionados: 0.5,
-        pendentesComuns: 0.3,
-        pendentesUrgentes: 0.2,
-    },
-    'FAROL': {
-        total: 3,
-        solucionados: 0.4,
-        pendentesComuns: 0.4,
-        pendentesUrgentes: 0.2,
-    },
-};
-
 export default function ResumoBairro({ bairro }) {
-  const info = mockData[bairro];
+  const [info, setInfo] = useState(null);
 
-  if (!info) return <div>Bairro não encontrado</div>;
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await api.get('/incidents');
+        const incidentes = res.data.filter(i => i.bairro === bairro);
+        console.log("incidentes:", incidentes); 
+
+        const total = incidentes.length;
+        if (total === 0) return setInfo(null);
+        //precisa mudar pra pegar os status corretos
+        const solucionados = incidentes.filter(i => i.status === 'BAIXA').length;
+        const pendentesUrgentes = incidentes.filter(i => i.status !== 'BAIXA' && i.status === 'BAIXA').length;
+        const pendentesComuns = total - solucionados - pendentesUrgentes;
+
+        setInfo({
+          total,
+          solucionados: solucionados / total,
+          pendentesComuns: pendentesComuns / total,
+          pendentesUrgentes: pendentesUrgentes / total,
+        });
+      } catch (err) {
+        console.error('Erro ao buscar dados do bairro:', err);
+        setInfo(null);
+      }
+    }
+
+    fetchData();
+  }, [bairro]);
+
+  if (!info) return <div className="text-sm text-gray-500">Sem dados para o bairro {bairro}</div>;
 
   const pieData = [
     { name: 'Solucionados', value: info.solucionados },

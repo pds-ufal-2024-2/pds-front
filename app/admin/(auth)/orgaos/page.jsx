@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from "react";
-import TabelaOrgaos from "../../components/admin/tabelaOrgaos";
-import ModalNovoOrgao from "../../components/admin/cadastroOrgao";
+import TabelaOrgaos from "../../../components/admin/tabelaOrgaos";
+import ModalNovoOrgao from "../../../components/admin/cadastroOrgao";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 export default function AdminOrgaos() {

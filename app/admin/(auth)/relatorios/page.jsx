@@ -1,7 +1,7 @@
 import React from "react";
-import TabelaRelatorios from "../../components/admin/tabelaRelatorios";
-import GraficoDemandasRelatorio from "../../components/admin/graficoDemandasRelatorios";
-import GraficoPendentesRelatorio from "../../components/admin/graficoPendentesRelatorio";
+import TabelaRelatorios from "../../../components/admin/tabelaRelatorios";
+import GraficoDemandasRelatorio from "../../../components/admin/graficoDemandasRelatorios";
+import GraficoPendentesRelatorio from "../../../components/admin/graficoPendentesRelatorio";
 
 export default function AdminRelatorios() {
     

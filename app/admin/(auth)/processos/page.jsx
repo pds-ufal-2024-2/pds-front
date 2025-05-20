@@ -1,7 +1,7 @@
 import React from "react";
-import TabelaSolicitacoes from "../../components/admin/tabelaSolicitacoes";
-import GraficoSolicitacoesBairro from "../../components/admin/graficoSolicitacoesBairro";
-import GraficoDemandasComAtraso from "../../components/admin/graficoDemandas";
+import TabelaSolicitacoes from "../../../components/admin/tabelaSolicitacoes";
+import GraficoSolicitacoesBairro from "../../../components/admin/graficoSolicitacoesBairro";
+import GraficoDemandasComAtraso from "../../../components/admin/graficoDemandas";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 
 export default function AdminProcessos() {
