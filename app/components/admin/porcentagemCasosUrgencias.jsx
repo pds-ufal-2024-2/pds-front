@@ -47,7 +47,7 @@ export default function ResumoBairro({ bairro }) {
   ];
 
   return (
-    <div className="p-4 w-[240px]">
+    <div className="p-4 w-[240px] flex flex-col items-center">
       <h3 className="text-center font-semibold text-sm mb-2">{bairro}</h3>
       <PieChart width={180} height={130}>
         <Pie

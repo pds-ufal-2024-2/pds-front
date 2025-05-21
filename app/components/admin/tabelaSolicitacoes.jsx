@@ -1,10 +1,11 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { DocumentMagnifyingGlassIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
-import { ExclamationTriangleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon, XCircleIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import api from '@/services/api';
 import { usePathname } from "next/navigation";
+import ModalEditarSolicitacao from '../../components/admin/modalEditarSolicitacao';
 
 export default function TabelaSolicitacoes() {
   const [solicitacoes, setSolicitacoes] = useState([]);
@@ -12,8 +13,16 @@ export default function TabelaSolicitacoes() {
   const [carregando, setCarregando] = useState(true);
   const pathname = usePathname();
   const [filtroUrgencia, setFiltroUrgencia] = useState('TODAS');
+  const [modoEdicao, setModoEdicao] = useState(false);
 
-
+  const atualizarTabela = async () => {
+    try {
+      const res = await api.get('incidents');
+      setSolicitacoes(res.data);
+    } catch (err) {
+      console.error('Erro ao atualizar tabela:', err);
+    }
+  };
   useEffect(() => {
   async function fetchSolicitacoes() {
     try {
@@ -87,7 +96,14 @@ export default function TabelaSolicitacoes() {
                       </td>
                       <td className="px-4 py-2">
                         <div className="flex gap-2">
-                          <DocumentMagnifyingGlassIcon className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" />
+                          <PencilSquareIcon 
+                            className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelecionado(s);
+                              setModoEdicao(true);
+                            }}
+                          />
                           <ArrowTopRightOnSquareIcon className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" />
                         </div>
                       </td>
@@ -105,9 +121,14 @@ export default function TabelaSolicitacoes() {
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
           {pathname === "/admin/urgencias" ? (
             <div className="modal-urgencias w-3/5 max-h-[90vh] overflow-y-auto bg-white border border-purple-300 rounded-xl p-4 flex">
-              {/* LADO ESQUERDO: imagem */}
-              <div className="w-1/2 relative h-[300px]">
-                <Image src={selecionado.image} alt="imagem" fill className="rounded-xl object-cover" />
+              {/* LADO ESQUERDO: imagem e categoria */}
+              <div className="flex flex-col w-1/2 gap-2">
+                <div className="w-full relative h-[300px]">
+                  <Image src={selecionado.image} alt="imagem" fill className="rounded-xl object-cover" />
+                </div>
+                <div className="bg-purple-700 text-white text-sm rounded-xl w-max px-2 py-1">
+                  {selecionado.category}
+                </div>
               </div>
 
               {/* LADO DIREITO */}
@@ -127,10 +148,10 @@ export default function TabelaSolicitacoes() {
                   </div>
 
                   <div className="flex justify-between">
-                    <div className="w-2/6 border border-yellow-200 bg-yellow-50 rounded-lg text-center p-2 font-semibold">
+                    <div className="w-2/6 h-1/3 border border-yellow-200 bg-yellow-50 rounded-lg text-center p-2 font-semibold">
                       {selecionado.description}
                     </div>
-                    <div className="flex gap-2 items-center bg-gray-200 border border-gray-400 rounded-lg px-2 py-1">
+                    <div className="flex gap-2 h-1/4 items-center bg-gray-200 border border-gray-400 rounded-lg px-2 py-1">
                       <ExclamationTriangleIcon className="h-5 w-5 text-red-600" />
                       <div className="flex flex-col items-center border-l border-gray-400 pl-2">
                         <h3 className="text-sm font-semibold">{selecionado.counter}</h3>
@@ -149,67 +170,26 @@ export default function TabelaSolicitacoes() {
                     <p className="text-sm text-gray-600">{selecionado.description}</p>
                   </div>
 
-                  <div className="bg-purple-700 text-white text-sm rounded-xl w-max px-2 py-1">
-                    {selecionado.category}
-                  </div>
                 </div>
               </div>
             </div>
           ) : pathname === "/admin/processos" ? (
             <div className="modal-urgencias w-3/5 max-h-[90vh] overflow-y-auto bg-white border border-purple-300 rounded-xl p-4 shadow-lg flex">
-            {/* processos */}
-            <div className="w-full flex flex-col border-purple-700 rounded-xl">
-              {/* id e botao de fechar */}
-              <div className="flex justify-between items-center">
-                <h3 className="text-xs text-gray-700 ml-2">ID: #{selecionado.id}</h3>
-                <button
-                  onClick={() => setSelecionado(null)}
-                  className="text-purple-700 rounded hover:bg-purple mr-2"
-                >
-                  <XCircleIcon className="h-8 w-8"/>
-                </button>
-              </div>
-              {/* imagem lado superior */}
-              <div className="w-full">
-                <Image src={selecionado.image} alt="imagem" width={300} height={300} className="rounded-xl"/>
-              </div>
-              {/* lado inferior */}
-              <div className="flex flex-col gap-2 mt-2">
-                {/* tipos e nome da ocorrencia */}
-                <div className="flex flex-col mt-2 w-2/4">
-                  <span className="text-center text-white text-md bg-purple-700 rounded-xl w-1/2">{selecionado.category}</span>
-                  <span className="text-purple-700 font-bold text-xl">{selecionado.incident}</span>
-                </div>
-                {/* situacao e duraçao do atraso */}
-                <div className="flex gap-2 items-center mt-1">
-                  {/* card situacao */}
-                  <div className="w-1/4 border-1 rounded-lg border-yellow-200 bg-yellow-50 text-center">
-                    <span className="text-md font-semibold">{selecionado.description}</span>
-                  </div>
-                  {/* card duraçao do atraso */}
-                  <div className="w-1/4 ml-2 border-1 rounded-lg border-gray-200 bg-gray-200 text-center">
-                    <span className="font-semibold text-md">2 meses em</span>
-                    <span className="text-md text-red-600 font-semibold"> ATRASO</span>
-                    {/* <h3 className="text-xs text-red-600">ATRASO</h3> */}
-                  </div>
-                </div>
-                {/* notas do servidor */}
-                <div className="flex flex-col text-start gap-2 mt-4 bg-gray-200 rounded-lg p-2">
-                  <h3 className="text-purple-700 text-sm font-semibold">NOTAS DO SERVIDOR</h3>
-                  <span className="text-xs text-gray-500">Devido o cano quebrado, não foi possível tratar o asfalto</span>
-                </div>
-                {/* encaminhamento do problema */}
-                <div className="gap-2 mt-4 bg-gray-200 rounded-lg p-2">
-                  <span className="text-xs text-gray-500">O problema foi encaminhado para BRK pelo órgão {selecionado.entity}</span>
-                </div>
-              </div>
+                <h1>teste</h1>
             </div>
-          </div>
         ) : null}
         </div>
       )}
     </div>
+
+    {modoEdicao && (
+      <ModalEditarSolicitacao
+        selecionado={selecionado}
+        setSelecionado={setSelecionado}
+        onClose={() => setModoEdicao(false)}
+        atualizarTabela={atualizarTabela}
+      />
+    )}
   </div>
   )
 }
-  
