@@ -38,7 +38,6 @@ export default function GraficoDemandasRelatorio() {
             />
             <YAxis hide />
             <Tooltip
-              cursor={{ fill: 'rgba(0,0,0,0.05)' }}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (
@@ -54,6 +53,7 @@ export default function GraficoDemandasRelatorio() {
                 }
                 return null;
               }}
+              cursor={{ fill: 'rgba(0,0,0,0.05)' }}
             />
             <Bar dataKey="pendentes" name="Pendentes">
               {data.map((entry, index) => (

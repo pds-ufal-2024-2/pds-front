@@ -1,75 +1,74 @@
 "use client"
-import React from "react";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
-import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/outline";
-
+import { useRouter } from "next/navigation";
+import { Table, TableBody, TableCell, TableHeader, TableColumn, TableRow } from "@heroui/react";
+import { useEffect, useState } from "react";
+import api from '@/services/api';
 
 export default function TabelaOrgaos() {
+  const router = useRouter();
+  const [carregando, setCarregando] = useState(true);
+  const [orgaos, setOrgaos] = useState([]);
 
-  const orgaos = [
-      {
-          id: '001',
-          cadastro: '20/04/2025',
-          orgao: 'SEMINFRA',
-          acoes: '',
-      },
-      {
-          id: '002',
-          cadastro: '21/04/2025',
-          orgao: 'BRK',
-          acoes: '',
-      },
-      {
-          id: '003',
-          cadastro: '22/03/2025',
-          orgao: 'DMTT',
-          acoes: '',
-      },
-      {
-          id: '004',
-          cadastro: '20/07/2025',
-          orgao: 'EQUATORIAL',
-          acoes: '',
-      },
-  ];
-  
+  useEffect(() => {
+    async function fetchOrgaos() {
+      try {
+        const res = await api.get("incidents");
+        setOrgaos(res.data);
+        console.log(res.data);
+      } catch (err) {
+        console.error("Erro ao buscar órgãos:", err);
+        setOrgaos([]);
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    fetchOrgaos();
+  }, []);
+
   return (
-  <div className="w-full flex justify-between">
-    {/* tabela de orgaos */}
-    <div className="flex container w-full flex-row gap-4">
-      <div className="flex text-sm">
-        <div className="flex flex-col w-3/5">
-          <table className="table-auto border-collapse border border-purple-200">
-            <thead className="bg-purple-200">
-              <tr>
-                <th className="border border-gray-200 px-4 py-2">Órgão</th>
-                <th className="border border-gray-200 px-4 py-2">Cadastrado em</th>
-                <th className="border border-gray-200 px-4 py-2"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 text-center">
-            {orgaos.map((o) => (
-              <tr key={o.id} className="cursor-pointer hover:bg-gray-100">
-                <td className="px-4 py-2">{o.orgao}</td>
-                <td className="px-4 py-2">{o.cadastro}</td>
-                <td className="px-4 py-2">
-                    {o.acoes === '' ? (
-                      <div className="flex gap-2">
-                        <DocumentMagnifyingGlassIcon className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" />
-                        <ArrowTopRightOnSquareIcon className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" />
-                      </div>
-                    ) : (
-                      <button className="text-purple-600 hover:underline">Acompanhar</button>
-                    )}
-                  </td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div className="w-full flex justify-between">
+      <Table aria-label="Órgãos cadastrados" className="w-full" selectionMode="none">
+        <TableHeader>
+          <TableColumn className="text-center">Órgão</TableColumn>
+          <TableColumn className="text-center">Cadastrado em</TableColumn>
+          <TableColumn />
+        </TableHeader>
+        <TableBody>
+          {carregando ? (
+            <TableRow>
+              <TableCell colSpan={3} className="text-center text-gray-500">
+                Carregando órgãos...
+              </TableCell>
+            </TableRow>
+          ) : orgaos.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={3} className="text-center text-red-500">
+                Não foi possível buscar órgãos, tente novamente mais tarde.
+              </TableCell>
+            </TableRow>
+          ) : (
+            orgaos.map((o) => (
+              <TableRow key={o.id} className="cursor-pointer hover:bg-gray-50 text-gray-500">
+                <TableCell className="text-gray-500 text-center">{o.entity}</TableCell>
+                 <TableCell className="text-gray-500 text-center">
+                    {new Date(o.created_at).toLocaleDateString('pt-BR')}
+                  </TableCell>
+                <TableCell>
+                  <button
+                    onClick={() => router.push(`/admin/orgaos/${encodeURIComponent(o.entity)}`)}
+                    className="flex items-center gap-2 text-purple-600 hover:underline"
+                  >
+                    Acompanhar
+                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                  </button>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
     </div>
-  </div>
-  )
+  );
 }
-  

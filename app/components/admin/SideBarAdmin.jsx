@@ -1,16 +1,24 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import Image from 'next/image';
-import logo from '../../../public/logoInfraZen.png';
+// import Link from 'next/link';
+// import { usePathname } from 'next/navigation';
+// import Image from 'next/image';
+// import logo from '../../../public/logoInfraZen.png';
+// import {
+//   ExclamationTriangleIcon,
+//   ChartBarIcon,
+//   BuildingOffice2Icon,
+// } from '@heroicons/react/24/solid';
 import {
-  ExclamationTriangleIcon,
-  DocumentMagnifyingGlassIcon,
-  ChartBarIcon,
   BuildingOffice2Icon,
+  ChartBarIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/solid';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+import SidebarItem from './SidebarItem';
+import SidebarToggle from './SidebarToggle';
 
 const navItems = [
   { label: 'Processos e demandas', icon: ExclamationTriangleIcon, href: '/admin/urgencias' },
@@ -21,32 +29,34 @@ const navItems = [
 ];
 
 export default function SidebarAdmin() {
-  const pathname = usePathname();
+  // const pathname = usePathname();
+
+  const router = useRouter();
+  const [open, setOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setOpen(!open);
+  };
 
   return (
-    <div className="w-1/6 bg-gradient-to-b from-purple-300 to-purple-100 shadow-md flex flex-col p-4 gap-5 text-black">
-      {/* <h2 className="text-xl font-bold mb-6 text-center">InfraZen</h2> */}
-      <div className="w-full h-1/6 flex items-center">
-        <Image src={logo} alt='logo' width={300} height={300}/>
+    <nav
+      className="h-screen border-r flex flex-col justify-between items-center bg-background"
+      style={{
+        width: `${open ? "260px" : "80px"}`,
+        transition: "all 0.3s ease",
+      }}
+    >
+      <SidebarToggle open={open} toggleSidebar={toggleSidebar} />
+      <div className="flex flex-col items-center w-full grow p-4 gap-4">
+        {navItems.map((route, index) => (
+          <SidebarItem
+            key={index}
+            collapse={!open}
+            {...route}
+            onClick={() => router.push(route.href)}
+          />
+        ))}
       </div>
-      <nav className="space-y-10">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`flex items-center space-x-3 px-2 py-1 rounded-md ${
-                isActive ? 'bg-purple-300 text-purple-900 font-semibold' : 'hover:text-purple-700'
-              }`}
-            >
-              <item.icon className="h-6 w-6" />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
+    </nav>
   );
 }

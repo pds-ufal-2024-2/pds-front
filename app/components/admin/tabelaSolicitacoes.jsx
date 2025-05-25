@@ -1,7 +1,8 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { DocumentMagnifyingGlassIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
 import { ExclamationTriangleIcon, XCircleIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { Table, TableBody, TableCell, TableHeader, TableColumn, TableRow } from "@heroui/react";
 import Image from "next/image";
 import api from '@/services/api';
 import { usePathname } from "next/navigation";
@@ -13,7 +14,14 @@ export default function TabelaSolicitacoes() {
   const [carregando, setCarregando] = useState(true);
   const pathname = usePathname();
   const [filtroUrgencia, setFiltroUrgencia] = useState('TODAS');
+  const [filtroTipo, setFiltroTipo] = useState('TODOS');
+  const [filtroOrgao, setFiltroOrgao] = useState('TODOS');
+  const [filtroBairro, setFiltroBairro] = useState('TODOS');
   const [modoEdicao, setModoEdicao] = useState(false);
+  const [urgencias, setUrgencias] = useState([]);
+  const [tipos, setTipos] = useState([]);
+  const [orgaos, setOrgaos] = useState([]);
+  const [bairros, setBairros] = useState([]);
 
   const atualizarTabela = async () => {
     try {
@@ -23,12 +31,32 @@ export default function TabelaSolicitacoes() {
       console.error('Erro ao atualizar tabela:', err);
     }
   };
+
+  // const atualizarLocal = (solicitacaoAtualizada) => {
+  //   setSolicitacoes((prev) =>
+  //     prev.map((s) => (s.id === solicitacaoAtualizada.id ? solicitacaoAtualizada : s))
+  //   );
+  // };
+
   useEffect(() => {
   async function fetchSolicitacoes() {
     try {
       const res = await api.get("incidents");
       setSolicitacoes(res.data);
-      console.log("Solicitações:", res.data);
+
+      const listaUrgencias = [...new Set(res.data.map(item => item.status).filter(Boolean))];
+      setUrgencias(listaUrgencias);
+
+      const listaTipos = [...new Set(res.data.map(item => item.category).filter(Boolean))];
+      setTipos(listaTipos);
+
+      const listaOrgaos = [...new Set(res.data.map(item => item.entity).filter(Boolean))];
+      setOrgaos(listaOrgaos);
+
+      const listaBairros = [...new Set(res.data.map(item => item.bairro).filter(Boolean))];
+      setBairros(listaBairros);
+
+      console.log("Tipos: ", listaTipos);
     } catch (err) {
       console.error("Erro ao buscar solicitações:", err);
       setSolicitacoes([]);
@@ -40,11 +68,21 @@ export default function TabelaSolicitacoes() {
   fetchSolicitacoes();
 }, []);
 
+  const formatarData = (dataISO) => {
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    });
+  };
+
+
   return (
     <div className="flex justify-between">
       <div className="flex flex-col container w-full gap-4">
         <div className="flex flex-col text-sm">
-          <div className="flex flex-col w-3/5">
+          <div className="flex flex-col w-full">
             {carregando ? (
               <p className="text-gray-500">Carregando solicitações...</p>
             ) : solicitacoes.length === 0 ? (
@@ -55,62 +93,102 @@ export default function TabelaSolicitacoes() {
               <select
                 value={filtroUrgencia}
                 onChange={(e) => setFiltroUrgencia(e.target.value)}
-                className="border rounded px-2 py-1 text-sm"
+                className="border rounded px-2 py-1 text-sm mr-4"
               >
                 <option value="TODAS">Todas</option>
-                <option value="ALTA">Alta</option>
-                <option value="MÉDIA">Média</option>
-                <option value="BAIXA">Baixa</option>
+                {urgencias.map((urg, index) => (
+                  <option key={index} value={urg}>{urg}</option>
+                ))}
               </select>
-              <table className="table-auto border-collapse border border-purple-200 mt-4">
-                <thead className="bg-purple-200">
-                  <tr>
-                    <th className="border border-gray-200 px-4 py-2">Problema</th>
-                    <th className="border border-gray-200 px-4 py-2">Tipo</th>
-                    <th className="border border-gray-200 px-4 py-2">Data da solicitação</th>
-                    <th className="border border-gray-200 px-4 py-2">Órgão</th>
-                    <th className="border border-gray-200 px-4 py-2">Levantamento</th>
-                    <th className="border border-gray-200 px-4 py-2">Urgência</th>
-                    <th className="border border-gray-200 px-4 py-2">Ações</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 text-center">
+              <label className="font-semibold text-sm mr-2">Filtrar por tipo:</label>
+              <select
+                value={filtroTipo}
+                onChange={(e) => setFiltroTipo(e.target.value)}
+                className="border rounded px-2 py-1 text-sm mr-4"
+              >
+                <option value="TODOS">Todos</option>
+                {tipos.map((tipo, index) => (
+                  <option key={index} value={tipo}>{tipo}</option>
+                ))}
+              </select>
+              <label className="font-semibold text-sm mr-2">Filtrar por órgão:</label>
+              <select
+                value={filtroOrgao}
+                onChange={(e) => setFiltroOrgao(e.target.value)}
+                className="border rounded px-2 py-1 text-sm mr-4"
+              >
+                <option value="TODOS">Todos</option>
+                {orgaos.map((orgao, index) => (
+                  <option key={index} value={orgao}>{orgao}</option>
+                ))}
+              </select>
+              <label className="font-semibold text-sm mr-2">Filtrar por bairro:</label>
+              <select
+                value={filtroBairro}
+                onChange={(e) => setFiltroBairro(e.target.value)}
+                className="border rounded px-2 py-1 text-sm mr-4"
+              >
+                <option value="TODOS">Todos</option>
+                {bairros.map((bairro, index) => (
+                  <option key={index} value={bairro}>{bairro}</option>
+                ))}
+              </select>
+              <Table className="table-auto mt-4 text-center">
+                <TableHeader className="bg-purple-200">
+                  <TableColumn className="px-4 py-2 text-center">Problema</TableColumn>
+                  <TableColumn className="px-4 py-2 text-center">Tipo</TableColumn>
+                  <TableColumn className="px-4 py-2 text-center">Data da solicitação</TableColumn>
+                  <TableColumn className="px-4 py-2 text-center">Órgão</TableColumn>
+                  <TableColumn className="px-4 py-2 text-center">Levantamento</TableColumn>
+                  <TableColumn className="px-4 py-2 text-center">Urgência</TableColumn>
+                  <TableColumn className="px-4 py-2 text-center">Editar</TableColumn>
+                  <TableColumn className="px-4 py-2 text-center">Gerar relatório</TableColumn>
+                </TableHeader>
+                <TableBody className="divide-y divide-gray-200 text-center">
                   {solicitacoes
-                    .filter(s => filtroUrgencia === 'TODAS' || s.status === filtroUrgencia)
+                    .filter(s => 
+                      (filtroUrgencia === 'TODAS' || s.status === filtroUrgencia) &&
+                      (filtroTipo === 'TODOS' || s.category === filtroTipo) &&
+                      (filtroOrgao === 'TODOS' || s.entity === filtroOrgao) &&
+                      (filtroBairro === 'TODOS' || s.bairro === filtroBairro)
+                    )
                     .map((s) => (
-                    <tr key={s.id} onClick={() => setSelecionado(s)} className="cursor-pointer hover:bg-gray-100">
-                      <td className="px-4 py-2">{s.incident}</td>
-                      <td className="px-4 py-2">{s.category}</td>
-                      <td className="px-4 py-2">{s.created_at}</td>
-                      <td className="px-4 py-2">{s.entity}</td>
-                      <td className="px-4 py-2">{s.counter}</td>
-                      {/* <td className="px-4 py-2">{s.urgencia}</td> */}
-                      <td className="px-4 py-2 font-semibold">
-                        <span className={
-                          s.status === "ALTA" ? "text-red-600" :
-                          s.status === "MÉDIA" ? "text-yellow-500" :
-                          "text-green-600"
-                        }>
-                          {s.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2">
-                        <div className="flex gap-2">
-                          <PencilSquareIcon 
-                            className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelecionado(s);
-                              setModoEdicao(true);
-                            }}
-                          />
-                          <ArrowTopRightOnSquareIcon className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" />
-                        </div>
-                      </td>
-                    </tr>
+                      <TableRow key={s.id} onClick={() => setSelecionado(s)} className="cursor-pointer hover:bg-gray-100">
+                        <TableCell className="px-4 py-2 text-center">{s.incident}</TableCell>
+                        <TableCell className="px-4 py-2 text-center">{s.category}</TableCell>
+                        <TableCell className="px-4 py-2 text-center">{formatarData(s.created_at)}</TableCell>
+                        <TableCell className="px-4 py-2 text-center">{s.entity}</TableCell>
+                        <TableCell className="px-4 py-2 text-center">{s.counter}</TableCell>
+                        <TableCell className="px-4 py-2 font-semibold text-center">
+                          <span className={
+                            s.status === "ALTA" ? "text-red-600" :
+                            s.status === "MÉDIA" ? "text-yellow-500" :
+                            "text-green-600"
+                          }>
+                            {s.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="px-4 py-2">
+                          <div className="flex gap-2 justify-center">
+                            <PencilSquareIcon 
+                              className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelecionado(s);
+                                setModoEdicao(true);
+                              }}
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell className="px-4 py-2 text-center">
+                          <div className="flex gap-2 justify-center">
+                            <ArrowTopRightOnSquareIcon className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" />
+                          </div>
+                        </TableCell>
+                      </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
             )}
           </div>

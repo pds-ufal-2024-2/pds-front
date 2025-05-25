@@ -1,8 +1,5 @@
 "use client"
-import React from "react";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
-import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/outline";
-
+import { Table, TableBody, TableCell, TableHeader, TableColumn, TableRow } from "@heroui/react";
 
 export default function TabelaRelatorios() {
 
@@ -83,7 +80,7 @@ export default function TabelaRelatorios() {
   return (
   <div className="w-full flex justify-between">
     {/* tabela de relatorios */}
-    <div className="flex container w-full flex-row gap-4">
+    {/* <div className="flex container w-full flex-row gap-4">
       <div className="flex text-sm">
         <div className="flex flex-col w-3/5">
           <table className="table-auto border-collapse border border-purple-200">
@@ -121,7 +118,31 @@ export default function TabelaRelatorios() {
           </table>
         </div>
       </div>
-    </div>
+    </div> */}
+    <Table aria-label="Relatórios cadastrados" className="w-full" selectionMode="none">
+      <TableHeader>
+        <TableColumn>ID</TableColumn>
+        <TableColumn>Tipo de Rel.</TableColumn>
+        <TableColumn>Nº de pedidos</TableColumn>
+        <TableColumn>Data de solicitação</TableColumn>
+        <TableColumn>Responsável</TableColumn>
+        <TableColumn>Concluídos</TableColumn>
+        <TableColumn>Urgência</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {relatorios.map((r) => (
+          <TableRow key={r.id} className="cursor-pointer hover:bg-gray-100">
+            <TableCell>{r.id}</TableCell>
+            <TableCell>{r.tipo}</TableCell>
+            <TableCell>{r.pedidos}</TableCell>
+            <TableCell>{r.dataSolicitacao}</TableCell>
+            <TableCell>{r.responsavel}</TableCell>
+            <TableCell>{r.concluidos}</TableCell>
+            <TableCell>{r.urgencia}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   </div>
   )
 }

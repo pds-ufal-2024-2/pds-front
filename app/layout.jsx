@@ -1,22 +1,17 @@
 import "@/styles/globals.css";
-import { Inter, Poppins } from "next/font/google";
-import "leaflet/dist/leaflet.css";
 import clsx from "clsx";
+import "leaflet/dist/leaflet.css";
+import { Poppins } from "next/font/google";
 
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
 const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-poppins",
-  weight: ["300", "400", "600", "700"], // Escolha os pesos que deseja
+  weight: ["300", "400", "600", "700"],
 });
 
 // const geistMono = Geist_Mono({
@@ -46,7 +41,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       suppressHydrationWarning
-      className={`${inter.variable} ${poppins.variable}`}
+      className={poppins.className}
       lang="pt-br"
     >
       <head>
@@ -56,7 +51,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={clsx("min-h-screen bg-background font-sans antialiased")}
+        className={clsx("min-h-screen bg-background font-poppins antialiased")}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <main>{children}</main>

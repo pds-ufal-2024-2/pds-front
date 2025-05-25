@@ -21,25 +21,26 @@ export default function GraficoPendentesRelatorio() {
   const COLORS = ['#9333ea', '#f43f5e']
 
   return (
-    <div className="w-4/6 h-auto rounded-xl p-4 flex flex-col items-center gap-2">
-      <div className="text-center text-black font-semibold">DEF. CIVIL</div>
-      <div className="w-32 h-32 relative">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={donutData}
-              innerRadius={40}
-              outerRadius={60}
-              dataKey="value"
-              startAngle={90}
-              endAngle={-270}
-            >
-              {donutData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
+    <div className="flex flex-col items-center gap-2">
+        <div className='mb-6'>
+          <div className='w-[200px] h-[200px] relative'>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={donutData}
+                  dataKey="value"
+                  endAngle={-270}
+                  innerRadius={40}
+                  outerRadius={60}
+                  startAngle={90}
+                >
+                  {donutData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
           <p className="font-bold text-lg">{totalCasos}</p>
           <p className="text-xs">casos</p>

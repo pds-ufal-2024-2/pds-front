@@ -1,39 +1,54 @@
 'use client';
 
-import { useState } from "react";
-import dynamic from 'next/dynamic';
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
-import TabelaSolicitacoes from "../../../components/admin/tabelaSolicitacoes";
-import GraficoSolicitacoesBairro from "../../../components/admin/graficoSolicitacoesBairro";
+// import dynamic from 'next/dynamic';
+import { ExclamationTriangleIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import { Button, Card, CardBody, CardHeader } from "@heroui/react";
+import { useState } from "react";
 
-const ResumoBairro = dynamic(() => import('../../../components/admin/porcentagemCasosUrgencias'), { ssr: false });
+import GraficoSolicitacoesBairro from "../../../components/admin/graficoSolicitacoesBairro";
+import ResumoBairro from "../../../components/admin/porcentagemCasosUrgencias";
+import TabelaSolicitacoes from "../../../components/admin/tabelaSolicitacoes";
+import PageTitle from "../../../components/PageTitle";
+
+// const ResumoBairro = dynamic(() => import('../../../components/admin/porcentagemCasosUrgencias'), { ssr: false });
 
 export default function AdminPage() {
   const [bairroSelecionado, setBairroSelecionado] = useState('');
 
   return (
-    <div className="p-6 space-y-10 bg-gray-50 min-h-screen">
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h1 className="text-2xl font-bold text-purple-700 mb-4">Solicitações urgentes</h1>
-        <TabelaSolicitacoes />
-      </div>
+    <div className="space-y-6 bg-gray-50">
+      <PageTitle buttons={[
+        <Button key="urgencias" className="flex items-center gap-2 font-semibold" color="primary">
+          ENVIAR PEDIDOS EM URGÊNCIA
+          <ChevronRightIcon className="h-5 w-5" />
+        </Button>
+      ]}
+        title="Processos e demandas" />
+      <Card>
+        <CardHeader className="flex items-center gap-2 text-purple-700">
+          <ExclamationTriangleIcon className="h-6 w-6" />
+          <h1 className="text-lg mb-0.5"> Solicitações urgentes</h1>
+        </CardHeader>
+        <CardBody>
+          <TabelaSolicitacoes />
+        </CardBody>
+      </Card>
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Gráfico de barras */}
-        <div className="flex-1 bg-white rounded-xl shadow-md p-6">
+        <Card className="flex-1 w-full h-[350px]">
+          <CardHeader className="flex items-center gap-2 text-purple-700">
+            <MapPinIcon className="h-6 w-6" />
+            <h1 className="text-lg">Casos por bairro(clique no bairro para visualizar o gráfico ao lado).</h1>
+          </CardHeader>
           <GraficoSolicitacoesBairro onSelectBairro={setBairroSelecionado} />
-        </div>
+        </Card>
 
         {/* Resumo bairro */}
-        <div className="w-full lg:w-[280px] bg-white rounded-xl shadow-md p-4 flex items-center justify-center">
+        <Card className="w-full lg:w-[280px] flex items-center justify-center">
           <ResumoBairro bairro={bairroSelecionado} />
-        </div>
-      </div>
-      <div className="flex justify-end">
-        <button className="flex items-center gap-2 bg-purple-700 text-white font-semibold px-5 py-3 rounded-lg hover:bg-purple-800 transition-all">
-          ENVIAR PEDIDOS EM URGÊNCIA
-          <ChevronRightIcon className="h-5 w-5" />
-        </button>
+        </Card>
       </div>
     </div>
   );

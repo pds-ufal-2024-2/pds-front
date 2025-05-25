@@ -8,7 +8,6 @@ export default function ModalEditarSolicitacao({
   setSelecionado,
   onClose,
   atualizarTabela,
-  atualizarLocal,
 }) {
   if (!selecionado) return null;
 
@@ -23,7 +22,7 @@ export default function ModalEditarSolicitacao({
         });
 
         // Atualiza diretamente no frontend, sem esperar o backend
-        atualizarLocal(selecionado);
+        // atualizarLocal(selecionado);
         // Atualiza a tabela
         atualizarTabela();
 

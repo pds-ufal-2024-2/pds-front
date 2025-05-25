@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
