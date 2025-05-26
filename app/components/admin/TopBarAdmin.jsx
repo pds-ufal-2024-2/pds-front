@@ -47,7 +47,7 @@ export default function TopbarAdmin() {
           <BellIcon className="w-6 h-6" />
         </Button>
         <Button isIconOnly color='primary' variant='light'>
-          <ArrowRightEndOnRectangleIcon className="w-6 h-6" />
+          <ArrowRightEndOnRectangleIcon className="w-6 h-6" onClick={handleLogout}/>
         </Button>
       </div>
     </header>

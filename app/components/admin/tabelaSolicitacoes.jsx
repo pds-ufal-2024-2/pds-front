@@ -44,6 +44,8 @@ export default function TabelaSolicitacoes() {
       const res = await api.get("incidents");
       setSolicitacoes(res.data);
 
+      console.log("Solicitações: ", res.data);
+
       const listaUrgencias = [...new Set(res.data.map(item => item.status).filter(Boolean))];
       setUrgencias(listaUrgencias);
 
