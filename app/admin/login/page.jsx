@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from '@/services/api';
-import { Button, Spinner } from "@heroui/react";
+import { Button } from "@heroui/react";
 import Cookies from 'js-cookie';
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 

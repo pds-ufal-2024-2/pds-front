@@ -152,7 +152,7 @@ export default function TabelaSolicitacoes() {
               <select
                 value={filtroLevantamento}
                 onChange={(e) => setFiltroLevantamento(e.target.value)}
-                className="border rounded px-2 py-1 text-sm mr-4"
+                className="border rounded px-2 py-1 text-sm"
               >
                 <option value="TODOS">Todos</option>
                 <option value="MAIOR">Maior</option>
@@ -230,7 +230,8 @@ export default function TabelaSolicitacoes() {
                               onClick={(e) => {
                                   e.stopPropagation();
                                   setSelecionado(s);
-                                  router.push(`/admin/urgencias/${encodeURIComponent(s.incident)}`)
+                                  router.push(`/admin/urgencias/${encodeURIComponent(s.code)}`)
+                                  console.log("Redirecionando para histórico da urgência:", s.id);
                               }}
                             />
                           </div>

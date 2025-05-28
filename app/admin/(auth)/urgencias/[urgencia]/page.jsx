@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import axios from 'axios';
 import api from '@/services/api';
 import {
   ArrowLeftIcon,
@@ -10,12 +9,12 @@ import {
   PaperAirplaneIcon,
 } from '@heroicons/react/24/solid';
 
-axios.defaults.withCredentials = true;
-
 export default function HistoricoPage() {
   const router = useRouter();
   const params = useParams();
   const { urgencia } = params;
+  const [nomeUrgencia, setNomeUrgencia ] = useState('');
+  const [incident, setIncident] = useState(null);
 
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,8 +24,13 @@ export default function HistoricoPage() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await api.get('incidents');
-        setHistory(res.data.history || []);
+        const response = await api.get(`/incidents/${urgencia}`);
+        setIncident(response.data);
+        setHistory(response.data.history || []);
+        setNomeUrgencia(response.data.incident);
+
+        console.log('Histórico carregado:', response.data);
+        console.log('id: ', urgencia);
       } catch (error) {
         console.error('Erro ao buscar histórico:', error);
       } finally {
@@ -42,16 +46,10 @@ export default function HistoricoPage() {
 
     setSending(true);
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/history',
-        {
-          incident_id: urgencia,
-          message: newMessage,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await api.post('/history', {
+        incident_id: incident.id,
+        message: newMessage,
+      });
 
       setHistory((prev) => [...prev, response.data]);
       setNewMessage('');
@@ -65,15 +63,17 @@ export default function HistoricoPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      
-      <div className="flex items-center gap-4 mb-8">
-        <ArrowLeftIcon
-          className="h-6 w-6 text-black cursor-pointer hover:text-purple-700"
-          onClick={() => router.push('/admin/urgencias')}
-        />
+
+      <div className="flex items-center justify-between gap-4 mb-8">
         <h1 className="text-2xl font-semibold">
-          Histórico da Ocorrência {urgencia}
+          Histórico da Ocorrência {nomeUrgencia}
         </h1>
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/admin/urgencias')}>
+          <ArrowLeftIcon
+            className="h-6 w-6 text-black cursor-pointer hover:text-purple-700"
+          />
+          <h1 className="text-black hover:text-purple-700 text-xl">Voltar</h1>
+        </div>
       </div>
 
       
