@@ -214,14 +214,24 @@ export default function TabelaSolicitacoes() {
                         </TableCell>
                         <TableCell className="px-4 py-2 text-center">
                           <div className="flex gap-2 justify-center">
-                            <ArrowTopRightOnSquareIcon className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" />
+                            <ArrowTopRightOnSquareIcon 
+                              className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" 
+                              onClick={(e) => {
+                                  e.stopPropagation();
+                                  // router.push(`/admin/relatorios/${encodeURIComponent(s.incident)}`);
+                              }}
+                            />
                           </div>
                         </TableCell>
                         <TableCell className="px-4 py-2 text-center">
                           <div className="flex gap-2 justify-center">
                             <ClockIcon 
                               className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer"
-                              onClick={() => router.push(`/admin/urgencias/${encodeURIComponent(s.incident)}`)}
+                              onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelecionado(s);
+                                  router.push(`/admin/urgencias/${encodeURIComponent(s.incident)}`)
+                              }}
                             />
                           </div>
                         </TableCell>

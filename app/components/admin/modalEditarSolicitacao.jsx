@@ -4,6 +4,7 @@ import { XCircleIcon } from "@heroicons/react/24/outline";
 import api from "@/services/api";
 import React from "react";
 import { useState, useEffect } from "react";
+import { Button } from "@heroui/react";
 
 export default function ModalEditarSolicitacao({
   selecionado,
@@ -12,10 +13,11 @@ export default function ModalEditarSolicitacao({
   atualizarTabela,
 }) {
   if (!selecionado) return null;
-
+  const [carregando, setCarregando] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+        setCarregando(true);
         await api.put(`/incidents/${selecionado.id}`, {
         incident: selecionado.incident,
         status: selecionado.status,
@@ -33,6 +35,9 @@ export default function ModalEditarSolicitacao({
         setSelecionado(null);
     } catch (error) {
         console.error("Erro ao editar:", error);
+        
+    } finally {
+      setCarregando(false);
     }
 };
 
@@ -145,15 +150,13 @@ export default function ModalEditarSolicitacao({
               <option value="RESOLVIDO">Resolvido</option>
             </select>
           </div>
-
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800"
-            >
-              Salvar Alterações
-            </button>
-          </div>
+          <Button
+            type="submit"
+            isLoading={carregando}
+            className="w-full bg-purple-700 text-white py-2 mt-2 rounded hover:bg-purple-800"
+          >
+            Salvar Alterações
+          </Button>
         </form>
       </div>
     </div>
