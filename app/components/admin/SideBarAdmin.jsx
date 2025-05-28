@@ -24,7 +24,7 @@ const navItems = [
   { label: 'Processos e demandas', icon: ExclamationTriangleIcon, href: '/admin/urgencias' },
   // { label: 'Urgências', icon: ExclamationTriangleIcon, href: '/admin/urgencias' },
   // { label: 'Processos e Demandas', icon: DocumentMagnifyingGlassIcon, href: '/admin/processos' },
-  { label: 'Relatórios', icon: ChartBarIcon, href: '/admin/relatorios' },
+  // { label: 'Relatórios', icon: ChartBarIcon, href: '/admin/relatorios' },
   { label: 'Órgãos', icon: BuildingOffice2Icon, href: '/admin/orgaos' },
 ];
 

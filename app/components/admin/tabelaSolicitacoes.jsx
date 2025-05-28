@@ -1,14 +1,16 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
-import { ExclamationTriangleIcon, XCircleIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon, XCircleIcon, PencilSquareIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { Table, TableBody, TableCell, TableHeader, TableColumn, TableRow } from "@heroui/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import api from '@/services/api';
 import { usePathname } from "next/navigation";
 import ModalEditarSolicitacao from '../../components/admin/modalEditarSolicitacao';
 
 export default function TabelaSolicitacoes() {
+  const router = useRouter();
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [selecionado, setSelecionado] = useState(null);
   const [carregando, setCarregando] = useState(true);
@@ -46,7 +48,7 @@ export default function TabelaSolicitacoes() {
 
       console.log("Solicitações: ", res.data);
 
-      const listaUrgencias = [...new Set(res.data.map(item => item.status).filter(Boolean))];
+      const listaUrgencias = [...new Set(res.data.map(item => item.priority).filter(Boolean))];
       setUrgencias(listaUrgencias);
 
       const listaTipos = [...new Set(res.data.map(item => item.category).filter(Boolean))];
@@ -79,6 +81,17 @@ export default function TabelaSolicitacoes() {
     });
   };
 
+  const [filtroLevantamento, setFiltroLevantamento] = useState('TODOS');
+
+  const ordenarPorLevantamento = (lista) => {
+    if (filtroLevantamento === "MAIOR") {
+      return [...lista].sort((a, b) => b.up.length - a.up.length);
+    }
+    if (filtroLevantamento === "MENOR") {
+      return [...lista].sort((a, b) => a.up.length - b.up.length);
+    }
+    return lista;
+  };
 
   return (
     <div className="flex justify-between">
@@ -135,6 +148,16 @@ export default function TabelaSolicitacoes() {
                   <option key={index} value={bairro}>{bairro}</option>
                 ))}
               </select>
+              <label className="font-semibold text-sm mr-2">Filtrar por levantamento</label>
+              <select
+                value={filtroLevantamento}
+                onChange={(e) => setFiltroLevantamento(e.target.value)}
+                className="border rounded px-2 py-1 text-sm mr-4"
+              >
+                <option value="TODOS">Todos</option>
+                <option value="MAIOR">Maior</option>
+                <option value="MENOR">Menor</option>
+              </select>
               <Table className="table-auto mt-4 text-center">
                 <TableHeader className="bg-purple-200">
                   <TableColumn className="px-4 py-2 text-center">Problema</TableColumn>
@@ -145,29 +168,36 @@ export default function TabelaSolicitacoes() {
                   <TableColumn className="px-4 py-2 text-center">Urgência</TableColumn>
                   <TableColumn className="px-4 py-2 text-center">Editar</TableColumn>
                   <TableColumn className="px-4 py-2 text-center">Gerar relatório</TableColumn>
+                  <TableColumn className="px-4 py-2 text-center">Visualizar Histórico</TableColumn>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200 text-center">
-                  {solicitacoes
-                    .filter(s => 
-                      (filtroUrgencia === 'TODAS' || s.status === filtroUrgencia) &&
-                      (filtroTipo === 'TODOS' || s.category === filtroTipo) &&
-                      (filtroOrgao === 'TODOS' || s.entity === filtroOrgao) &&
-                      (filtroBairro === 'TODOS' || s.bairro === filtroBairro)
-                    )
-                    .map((s) => (
+                  {ordenarPorLevantamento(
+                    solicitacoes
+                      .filter(s => 
+                        (filtroUrgencia === 'TODAS' || s.priority === filtroUrgencia) &&
+                        (filtroTipo === 'TODOS' || s.category === filtroTipo) &&
+                        (filtroOrgao === 'TODOS' || s.entity === filtroOrgao) &&
+                        (filtroBairro === 'TODOS' || s.bairro === filtroBairro)
+                      )
+                  ).map((s) => (
                       <TableRow key={s.id} onClick={() => setSelecionado(s)} className="cursor-pointer hover:bg-gray-100">
                         <TableCell className="px-4 py-2 text-center">{s.incident}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{s.category}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{formatarData(s.created_at)}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{s.entity}</TableCell>
-                        <TableCell className="px-4 py-2 text-center">{s.counter}</TableCell>
+                        <TableCell className="px-4 py-2 text-center">{s.up.length}</TableCell>
                         <TableCell className="px-4 py-2 font-semibold text-center">
                           <span className={
-                            s.status === "ALTA" ? "text-red-600" :
-                            s.status === "MÉDIA" ? "text-yellow-500" :
+                            s.priority === "HIGH" || s.priority === "high" ? "text-red-600" :
+                            s.priority === "LOW" ? "text-yellow-500" :
                             "text-green-600"
                           }>
-                            {s.status}
+                            {s.priority === "HIGH" || s.priority === "high"
+                              ? "ALTA"
+                              : s.priority === "LOW" || s.priority === "low"
+                              ? "BAIXA"
+                              : "NORMAL"
+                            }
                           </span>
                         </TableCell>
                         <TableCell className="px-4 py-2">
@@ -185,6 +215,14 @@ export default function TabelaSolicitacoes() {
                         <TableCell className="px-4 py-2 text-center">
                           <div className="flex gap-2 justify-center">
                             <ArrowTopRightOnSquareIcon className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" />
+                          </div>
+                        </TableCell>
+                        <TableCell className="px-4 py-2 text-center">
+                          <div className="flex gap-2 justify-center">
+                            <ClockIcon 
+                              className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer"
+                              onClick={() => router.push(`/admin/urgencias/${encodeURIComponent(s.incident)}`)}
+                            />
                           </div>
                         </TableCell>
                       </TableRow>
