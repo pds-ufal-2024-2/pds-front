@@ -2,6 +2,8 @@
 
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import api from "@/services/api";
+import React from "react";
+import { useState, useEffect } from "react";
 
 export default function ModalEditarSolicitacao({
   selecionado,
@@ -19,6 +21,7 @@ export default function ModalEditarSolicitacao({
         status: selecionado.status,
         entity: selecionado.entity,
         description: selecionado.description,
+        category: selecionado.category,
         });
 
         // Atualiza diretamente no frontend, sem esperar o backend
@@ -33,6 +36,27 @@ export default function ModalEditarSolicitacao({
     }
 };
 
+  const tipos = [
+    "Transporte",
+    "Saneamento",
+    "Iluminação",
+    "Violência",
+    "Saúde",
+    "Moradia",
+    "Meio Ambiente",
+  ];
+
+  const [tipoBusca, setTipoBusca] = React.useState(selecionado.category || "");
+  const [mostrarSugestoes, setMostrarSugestoes] = React.useState(false);
+
+  const sugestoes = tipos.filter(
+    (tipo) =>
+      tipo.toLowerCase().includes(tipoBusca.toLowerCase()) && tipoBusca.trim() !== ""
+  );
+
+  React.useEffect(() => {
+    setSelecionado({ ...selecionado, category: tipoBusca });
+  }, [tipoBusca]);
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
@@ -53,6 +77,39 @@ export default function ModalEditarSolicitacao({
               onChange={(e) => setSelecionado({ ...selecionado, incident: e.target.value })}
               className="w-full border rounded px-3 py-2"
             />
+          </div>
+
+          <div className="relative">
+            <label className="block text-sm font-medium">Tipo</label>
+            <input
+              type="text"
+              value={tipoBusca}
+              onChange={(e) => {
+                setTipoBusca(e.target.value);
+                setMostrarSugestoes(true);
+              }}
+              onFocus={() => setMostrarSugestoes(true)}
+              onBlur={() => setTimeout(() => setMostrarSugestoes(false), 100)}
+              className="w-full border rounded px-3 py-2"
+              placeholder="Digite para buscar..."
+              autoComplete="off"
+            />
+            {mostrarSugestoes && sugestoes.length > 0 && (
+              <ul className="absolute z-10 bg-white border w-full mt-1 rounded shadow max-h-40 overflow-y-auto">
+                {sugestoes.map((tipo) => (
+                  <li
+                    key={tipo}
+                    className="px-3 py-2 hover:bg-purple-100 cursor-pointer"
+                    onMouseDown={() => {
+                      setTipoBusca(tipo);
+                      setMostrarSugestoes(false);
+                    }}
+                  >
+                    {tipo}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div>

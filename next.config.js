@@ -1,5 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8000', // Se teu backend Laravel roda na porta 8000
+        pathname: '/storage/imagens/**',
+      },
+    ],
+  },
+
   async headers() {
     return [
       {
@@ -7,7 +18,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "http://localhost:8080",
+            value: "http://localhost:8080", // ou o frontend se for ao contrário
           },
           {
             key: "Access-Control-Allow-Credentials",
