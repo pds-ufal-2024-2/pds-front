@@ -60,7 +60,7 @@ export default function TabelaSolicitacoes() {
       const listaBairros = [...new Set(res.data.map(item => item.bairro).filter(Boolean))];
       setBairros(listaBairros);
 
-      console.log("Tipos: ", listaTipos);
+      // console.log("Tipos: ", listaTipos);
     } catch (err) {
       console.error("Erro ao buscar solicitações:", err);
       setSolicitacoes([]);
@@ -94,57 +94,54 @@ export default function TabelaSolicitacoes() {
   };
 
   const gerarRelatorio = async (incident) => {
-    console.log("entrou");
-  try {
-    const verSugestao = await api.put(`/incidents/${incident.id}/generate-suggestions`, {
-      description: incident.description,
-      //history: andamentos,
-    }
-    );
-    const andamentos = incident.history.map((h) => ({
-      data: new Date(h.created_at).toLocaleString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      }).replace(',', ''),
-      descricao: h.message,
-      sugestao: verSugestao.data.suggestions,
-    }));
-    console.log("Sugestões geradas:", verSugestao.data);
+    try {
+      const history = incident.history || [];
+      const suggestions = incident.suggestions || " ";
 
-    const response = await fetch(
-      "https://byjbkzggqnddlegim2kc2tdeoy0nbhyu.lambda-url.sa-east-1.on.aws/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ andamentos }),
+      const andamentos = history.map((h, i) => ({
+        data: new Date(h.created_at).toLocaleString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        }).replace(',', ''),
+        descricao: h.message,
+        sugestao: suggestions || "",
+      }));
+
+      const response = await fetch(
+        "https://byjbkzggqnddlegim2kc2tdeoy0nbhyu.lambda-url.sa-east-1.on.aws/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ andamentos }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.pdf_base64) {
+        throw new Error("Resposta não contém PDF");
       }
-    );
 
-    const data = await response.json();
+      const byteCharacters = atob(data.pdf_base64);
+      const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "application/pdf" });
 
-    if (!data.pdf_base64) {
-      throw new Error("Resposta não contém PDF");
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+
+    } catch (error) {
+      console.error("Erro ao gerar relatório:", error);
+      alert("Erro ao gerar relatório");
     }
+  };
 
-    const byteCharacters = atob(data.pdf_base64);
-    const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: "application/pdf" });
-
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-
-  } catch (error) {
-    console.error("Erro ao gerar relatório:", error);
-    alert("Erro ao gerar relatório");
-  }
-};
 
 
   return (
@@ -259,7 +256,7 @@ export default function TabelaSolicitacoes() {
                             <PencilSquareIcon 
                               className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer"
                               onClick={(e) => {
-                                e.stopPropagation();
+                                e.stopPropagation()
                                 setSelecionado(s);
                                 setModoEdicao(true);
                               }}
@@ -282,8 +279,8 @@ export default function TabelaSolicitacoes() {
                             <ArrowTopRightOnSquareIcon 
                               className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" 
                               onClick={(e) => {
-                                e.stopPropagation();
-                                gerarRelatorio(s); // ← Aqui passa o objeto da ocorrência
+                                e.stopPropagation()
+                                gerarRelatorio(s);
                               }}
                             />
                           </div>
