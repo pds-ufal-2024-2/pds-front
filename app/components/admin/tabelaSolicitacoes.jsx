@@ -318,7 +318,7 @@ export default function TabelaSolicitacoes() {
               {/* LADO ESQUERDO: imagem e categoria */}
               <div className="flex flex-col w-1/2 gap-2">
                 <div className="w-full relative h-[300px]">
-                  <Image src={selecionado.image_url || '/no-image.png'} alt="imagem" fill className="rounded-xl object-cover" />
+                  <Image src={selecionado.image || '/no-image.png'} alt="imagem" fill className="rounded-xl object-cover" />
                 </div>
                 <div className="bg-purple-700 text-white text-sm rounded-xl w-max px-2 py-1">
                   {selecionado.category}

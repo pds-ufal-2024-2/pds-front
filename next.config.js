@@ -5,8 +5,8 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '8000', // Se teu backend Laravel roda na porta 8000
-        pathname: '/storage/imagens/**',
+        port: '8080', // Se teu backend Laravel roda na porta 8080
+        pathname: '/storage/photos/**',
       },
     ],
   },
