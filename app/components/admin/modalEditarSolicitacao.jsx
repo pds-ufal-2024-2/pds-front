@@ -160,9 +160,9 @@ export default function ModalEditarSolicitacao({
               onChange={(e) => setSelecionado({ ...selecionado, priority: e.target.value })}
               className="w-full border rounded px-3 py-2"
             >
-              <option value="ALTA">Alta</option>
-              <option value="MÉDIA">Média</option>
-              <option value="BAIXA">Baixa</option>
+              <option value="high">Alta</option>
+              <option value="normal">Média</option>
+              <option value="low">Baixa</option>
             </select>
           </div>
 
