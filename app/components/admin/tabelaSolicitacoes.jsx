@@ -199,7 +199,7 @@ export default function TabelaSolicitacoes() {
                   <option key={index} value={bairro}>{bairro}</option>
                 ))}
               </select>
-              <label className="font-semibold text-sm mr-2">Ordernar por levantamento</label>
+              <label className="font-semibold text-sm mr-2">Ordenar por levantamento</label>
               <select
                 value={filtroLevantamento}
                 onChange={(e) => setFiltroLevantamento(e.target.value)}
