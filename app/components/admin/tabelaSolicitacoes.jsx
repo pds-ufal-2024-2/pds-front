@@ -93,6 +93,52 @@ export default function TabelaSolicitacoes() {
     return lista;
   };
 
+  const gerarRelatorio = async (incident) => {
+  try {
+    const andamentos = incident.history.map((h) => ({
+      data: new Date(h.created_at).toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }).replace(',', ''),
+      descricao: h.message,
+    }));
+
+    const response = await fetch(
+      "https://byjbkzggqnddlegim2kc2tdeoy0nbhyu.lambda-url.sa-east-1.on.aws/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ andamentos }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!data.pdf_base64) {
+      throw new Error("Resposta não contém PDF");
+    }
+
+    const byteCharacters = atob(data.pdf_base64);
+    const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "application/pdf" });
+
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+
+  } catch (error) {
+    console.error("Erro ao gerar relatório:", error);
+    alert("Erro ao gerar relatório");
+  }
+};
+
+
   return (
     <div className="flex justify-between">
       <div className="flex flex-col container w-full gap-4">
@@ -212,13 +258,24 @@ export default function TabelaSolicitacoes() {
                             />
                           </div>
                         </TableCell>
-                        <TableCell className="px-4 py-2 text-center">
+                        {/* <TableCell className="px-4 py-2 text-center">
                           <div className="flex gap-2 justify-center">
                             <ArrowTopRightOnSquareIcon 
                               className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" 
                               onClick={(e) => {
                                   e.stopPropagation();
                                   // router.push(`/admin/relatorios/${encodeURIComponent(s.incident)}`);
+                              }}
+                            />
+                          </div>
+                        </TableCell> */}
+                        <TableCell className="px-4 py-2 text-center">
+                          <div className="flex gap-2 justify-center">
+                            <ArrowTopRightOnSquareIcon 
+                              className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                gerarRelatorio(s); // ← Aqui passa o objeto da ocorrência
                               }}
                             />
                           </div>
