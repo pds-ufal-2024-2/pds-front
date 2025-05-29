@@ -10,7 +10,12 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "via.placeholder.com", 
+        hostname: "via.placeholder.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "whippet-equipped-possum.ngrok-free.app",
         pathname: "/**",
       },
     ],
