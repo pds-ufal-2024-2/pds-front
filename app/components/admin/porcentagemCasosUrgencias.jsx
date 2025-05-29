@@ -23,13 +23,13 @@ export default function ResumoBairro({ bairro }) {
       const total = incidentesBairro.length;
 
       // Pegando urgências únicas (só para gerar outros selects, se quiser)
-      const listaUrgencias = [...new Set(res.data.map(item => item.status).filter(Boolean))];
+      const listaUrgencias = [...new Set(res.data.map(item => item.priority).filter(Boolean))];
       setUrgencias(listaUrgencias);
 
       // Fazendo os cálculos corretamente
-      const pendentesBaixas = incidentesBairro.filter(i => i.status === 'BAIXA').length;
-      const pendentesUrgentes = incidentesBairro.filter(i => i.status === 'ALTA').length;
-      const pendentesMedias = incidentesBairro.filter(i => i.status === 'MÉDIA').length;
+      const pendentesBaixas = incidentesBairro.filter(i => i.priority === 'low').length;
+      const pendentesUrgentes = incidentesBairro.filter(i => i.priority === 'high').length;
+      const pendentesMedias = incidentesBairro.filter(i => i.priority === 'normal').length;
 
       setTotal(total);
 
