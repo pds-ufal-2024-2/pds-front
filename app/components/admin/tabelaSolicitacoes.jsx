@@ -360,7 +360,7 @@ export default function TabelaSolicitacoes() {
                   <div className="flex gap-2 h-1/4 w-1/4 items-center bg-gray-200 border border-gray-400 rounded-lg px-2 py-1">
                     <ExclamationTriangleIcon className="h-7 w-7 text-red-600" />
                     <div className="flex flex-col items-center border-l border-gray-400 pl-2">
-                      <h3 className="text-sm font-semibold">{selecionado.counter}</h3>
+                      <h3 className="text-sm font-semibold">{selecionado.up.length}</h3>
                       <h3 className="text-xs">reportes</h3>
                     </div>
                   </div>

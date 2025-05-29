@@ -24,6 +24,7 @@ export default function ModalEditarSolicitacao({
         entity: selecionado.entity,
         description: selecionado.description,
         category: selecionado.category,
+        public_visibility: selecionado.public_visibility,
         });
 
         // Atualiza diretamente no frontend, sem esperar o backend
