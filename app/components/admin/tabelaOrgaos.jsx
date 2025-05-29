@@ -32,7 +32,6 @@ export default function TabelaOrgaos() {
       <Table aria-label="Órgãos cadastrados" className="w-full" selectionMode="none">
         <TableHeader>
           <TableColumn className="text-center">Órgão</TableColumn>
-          <TableColumn className="text-center">Cadastrado em</TableColumn>
           <TableColumn />
         </TableHeader>
         <TableBody>
@@ -50,11 +49,11 @@ export default function TabelaOrgaos() {
             </TableRow>
           ) : (
             orgaos.map((o) => (
-              <TableRow key={o.id} className="cursor-pointer hover:bg-gray-50 text-gray-500">
-                <TableCell className="text-gray-500 text-center">{o.entity}</TableCell>
+              <TableRow key={o} className="cursor-pointer hover:bg-gray-50 text-gray-500">
+                <TableCell className="text-gray-500 text-center">{o}</TableCell>
                 <TableCell>
                   <button
-                    onClick={() => router.push(`/admin/orgaos/${encodeURIComponent(o.entity)}`)}
+                    onClick={() => router.push(`/admin/orgaos/${encodeURIComponent(o)}`)}
                     className="flex items-center gap-2 text-purple-600 hover:underline"
                   >
                     Acompanhar
