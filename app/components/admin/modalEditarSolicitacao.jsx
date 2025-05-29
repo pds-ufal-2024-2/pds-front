@@ -138,6 +138,20 @@ export default function ModalEditarSolicitacao({
           </div>
 
           <div>
+            <label className="block text-sm font-medium">Visibilidade</label>
+            <select
+              value={selecionado.public_visibility}
+              onChange={(e) =>
+                setSelecionado({ ...selecionado, public_visibility: parseInt(e.target.value) })
+              }
+              className="w-full border rounded px-3 py-2"
+            >
+              <option value={1}>Público</option>
+              <option value={0}>Privado</option>
+            </select>
+          </div>
+
+          <div>
             <label className="block text-sm font-medium">Urgência</label>
             <select
               value={selecionado.status}
