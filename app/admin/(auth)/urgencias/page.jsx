@@ -19,10 +19,10 @@ export default function AdminPage() {
   return (
     <div className="space-y-6 bg-gray-50">
       <PageTitle buttons={[
-        <Button key="urgencias" className="flex items-center gap-2 font-semibold" color="primary">
-          ENVIAR PEDIDOS EM URGÊNCIA
-          <ChevronRightIcon className="h-5 w-5" />
-        </Button>
+        // <Button key="urgencias" className="flex items-center gap-2 font-semibold" color="primary">
+        //   ENVIAR PEDIDOS EM URGÊNCIA
+        //   <ChevronRightIcon className="h-5 w-5" />
+        // </Button>
       ]}
         title="Processos e demandas" />
       <Card>

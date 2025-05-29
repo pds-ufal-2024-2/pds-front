@@ -54,9 +54,9 @@ export default function OrgaoPage() {
   };
 
   const total = dados.length;
-  const urgentes = dados.filter(i => i.status === "ALTA").length;
-  const medias = dados.filter(i => i.status === "MÉDIA").length;
-  const baixas = dados.filter(i => i.status === "BAIXA").length;
+  const urgentes = dados.filter(i => i.priority === "high").length;
+  const medias = dados.filter(i => i.priority === "normal").length;
+  const baixas = dados.filter(i => i.priority === "low").length;
 
   const bairros = [...new Set(dados.map(d => d.bairro))];
 
@@ -148,6 +148,7 @@ export default function OrgaoPage() {
           <table className="w-full text-sm">
             <thead className="bg-purple-200">
               <tr>
+                <th className="p-2">Código</th>
                 <th className="p-2">Problema</th>
                 <th className="p-2">Categoria</th>
                 <th className="p-2">Status</th>
@@ -158,6 +159,7 @@ export default function OrgaoPage() {
             <tbody>
               {dados.map(d => (
                 <tr key={d.id} className="text-center hover:bg-gray-50">
+                  <td className="p-2">{d.code}</td>
                   <td className="p-2">{d.incident}</td>
                   <td className="p-2">{d.category}</td>
                   <td className="p-2">{d.status}</td>

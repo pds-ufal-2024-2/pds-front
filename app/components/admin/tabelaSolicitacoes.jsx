@@ -199,7 +199,7 @@ export default function TabelaSolicitacoes() {
                   <option key={index} value={bairro}>{bairro}</option>
                 ))}
               </select>
-              <label className="font-semibold text-sm mr-2">Filtrar por levantamento</label>
+              <label className="font-semibold text-sm mr-2">Ordernar por levantamento</label>
               <select
                 value={filtroLevantamento}
                 onChange={(e) => setFiltroLevantamento(e.target.value)}
@@ -211,6 +211,7 @@ export default function TabelaSolicitacoes() {
               </select>
               <Table className="table-auto mt-4 text-center">
                 <TableHeader className="bg-purple-200">
+                  <TableColumn className="px-4 py-2 text-center">Solicitação</TableColumn>
                   <TableColumn className="px-4 py-2 text-center">Problema</TableColumn>
                   <TableColumn className="px-4 py-2 text-center">Tipo</TableColumn>
                   <TableColumn className="px-4 py-2 text-center">Data da solicitação</TableColumn>
@@ -232,6 +233,7 @@ export default function TabelaSolicitacoes() {
                       )
                   ).map((s) => (
                       <TableRow key={s.id} onClick={() => setSelecionado(s)} className="cursor-pointer hover:bg-gray-100">
+                        <TableCell className="px-4 py-2">{s.code}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{s.incident}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{s.category}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{formatarData(s.created_at)}</TableCell>
