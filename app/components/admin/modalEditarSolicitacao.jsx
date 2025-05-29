@@ -78,7 +78,7 @@ export default function ModalEditarSolicitacao({
             <label className="block text-sm font-medium">Problema</label>
             <input
               type="text"
-              value={selecionado.incident}
+              value={selecionado.incident || ""}
               onChange={(e) => setSelecionado({ ...selecionado, incident: e.target.value })}
               className="w-full border rounded px-3 py-2"
             />
@@ -88,7 +88,7 @@ export default function ModalEditarSolicitacao({
             <label className="block text-sm font-medium">Tipo</label>
             <input
               type="text"
-              value={tipoBusca}
+              value={tipoBusca || ""}
               onChange={(e) => {
                 setTipoBusca(e.target.value);
                 setMostrarSugestoes(true);
@@ -121,7 +121,7 @@ export default function ModalEditarSolicitacao({
             <label className="block text-sm font-medium">Descrição</label>
             <input
               type="text"
-              value={selecionado.description}
+              value={selecionado.description || ""}
               onChange={(e) => setSelecionado({ ...selecionado, description: e.target.value })}
               className="w-full border rounded px-3 py-2"
             />
@@ -131,7 +131,7 @@ export default function ModalEditarSolicitacao({
             <label className="block text-sm font-medium">Órgão</label>
             <input
               type="text"
-              value={selecionado.entity}
+              value={selecionado.entity || ""}
               onChange={(e) => setSelecionado({ ...selecionado, entity: e.target.value })}
               className="w-full border rounded px-3 py-2"
             />

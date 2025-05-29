@@ -94,7 +94,13 @@ export default function TabelaSolicitacoes() {
   };
 
   const gerarRelatorio = async (incident) => {
+    console.log("entrou");
   try {
+    const verSugestao = await api.put(`/incidents/${incident.id}/generate-suggestions`, {
+      description: incident.description,
+      //history: andamentos,
+    }
+    );
     const andamentos = incident.history.map((h) => ({
       data: new Date(h.created_at).toLocaleString('pt-BR', {
         day: '2-digit',
@@ -105,7 +111,9 @@ export default function TabelaSolicitacoes() {
         hour12: false,
       }).replace(',', ''),
       descricao: h.message,
+      sugestao: verSugestao.data.suggestions,
     }));
+    console.log("Sugestões geradas:", verSugestao.data);
 
     const response = await fetch(
       "https://byjbkzggqnddlegim2kc2tdeoy0nbhyu.lambda-url.sa-east-1.on.aws/",
@@ -320,8 +328,8 @@ export default function TabelaSolicitacoes() {
               {/* LADO DIREITO */}
               <div className="w-1/2 p-4">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xs text-gray-700">ID: #{selecionado.id}</h3>
+                <div className="flex justify-end items-center mb-2">
+                  {/* <h3 className="text-xs text-gray-700">ID: #{selecionado.id}</h3> */}
                   <button onClick={() => setSelecionado(null)} className="text-purple-700 hover:text-purple-900">
                     <XCircleIcon className="h-8 w-8" />
                   </button>
@@ -330,27 +338,32 @@ export default function TabelaSolicitacoes() {
                 <div className="flex flex-col gap-3">
                   <div className="flex justify-between items-center">
                     <h3 className="text-purple-700 font-bold text-2xl">{selecionado.incident}</h3>
-                    <h3 className="text-xs font-bold">Incentivo à postagem</h3>
+                    {/* <h3 className="text-xs font-bold">Incentivo à postagem</h3> */}
                   </div>
 
                   <div className="flex justify-between">
-                    <div className="w-2/6 h-1/3 border border-yellow-200 bg-yellow-50 rounded-lg text-center p-2 font-semibold">
+                    <div className="w-full h-1/3 border border-gray-400 rounded-lg text-start p-2 font-semibold">
                       {selecionado.description}
                     </div>
-                    <div className="flex gap-2 h-1/4 items-center bg-gray-200 border border-gray-400 rounded-lg px-2 py-1">
-                      <ExclamationTriangleIcon className="h-5 w-5 text-red-600" />
-                      <div className="flex flex-col items-center border-l border-gray-400 pl-2">
-                        <h3 className="text-sm font-semibold">{selecionado.counter}</h3>
-                        <h3 className="text-xs">reportes</h3>
-                      </div>
+
+                  </div>
+
+                  {/* <div className="flex items-center justify-between bg-purple-700 text-white rounded-lg p-2">
+                    <span>{selecionado.entity}</span>
+                    <button 
+                      className="text-sm hover:text-gray-200"
+                      // onClick={}>
+                      >
+                      Encaminhar
+                    </button>
+                  </div> */}
+                  <div className="flex gap-2 h-1/4 w-1/4 items-center bg-gray-200 border border-gray-400 rounded-lg px-2 py-1">
+                    <ExclamationTriangleIcon className="h-7 w-7 text-red-600" />
+                    <div className="flex flex-col items-center border-l border-gray-400 pl-2">
+                      <h3 className="text-sm font-semibold">{selecionado.counter}</h3>
+                      <h3 className="text-xs">reportes</h3>
                     </div>
                   </div>
-
-                  <div className="flex items-center justify-between bg-purple-700 text-white rounded-lg p-2">
-                    <span>{selecionado.entity}</span>
-                    <button className="text-sm hover:text-gray-200">Encaminhar</button>
-                  </div>
-
                   <div className="bg-gray-200 rounded-lg p-2">
                     <h2 className="text-purple-700 text-sm font-semibold">SOBRE</h2>
                     <p className="text-sm text-gray-600">{selecionado.description}</p>
@@ -359,11 +372,11 @@ export default function TabelaSolicitacoes() {
                 </div>
               </div>
             </div>
-          ) : pathname === "/admin/processos" ? (
+          ) : (
             <div className="modal-urgencias w-3/5 max-h-[90vh] overflow-y-auto bg-white border border-purple-300 rounded-xl p-4 shadow-lg flex">
-                <h1>teste</h1>
+                <h1>Não foi possível gerar o modal da urgência: {selecionado.incident}</h1>
             </div>
-        ) : null}
+        )}
         </div>
       )}
     </div>

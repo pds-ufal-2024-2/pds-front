@@ -72,7 +72,7 @@ export default function HistoricoPage() {
           <ArrowLeftIcon
             className="h-6 w-6 text-black cursor-pointer hover:text-purple-700"
           />
-          <h1 className="text-black hover:text-purple-700 text-xl">Voltar</h1>
+          <h1 className="text-black hover:text-gray-200 text-xl">Voltar</h1>
         </div>
       </div>
 
