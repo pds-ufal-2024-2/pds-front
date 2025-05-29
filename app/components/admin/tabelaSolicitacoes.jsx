@@ -329,7 +329,7 @@ export default function TabelaSolicitacoes() {
               <div className="w-1/2 p-4">
                 {/* Header */}
                 <div className="flex justify-end items-center mb-2">
-                  {/* <h3 className="text-xs text-gray-700">ID: #{selecionado.id}</h3> */}
+                  <h3 className="text-xs text-gray-700">Código: #{selecionado.code}</h3>
                   <button onClick={() => setSelecionado(null)} className="text-purple-700 hover:text-purple-900">
                     <XCircleIcon className="h-8 w-8" />
                   </button>
@@ -340,13 +340,13 @@ export default function TabelaSolicitacoes() {
                     <h3 className="text-purple-700 font-bold text-2xl">{selecionado.incident}</h3>
                     {/* <h3 className="text-xs font-bold">Incentivo à postagem</h3> */}
                   </div>
-
+{/* 
                   <div className="flex justify-between">
                     <div className="w-full h-1/3 border border-gray-400 rounded-lg text-start p-2 font-semibold">
                       {selecionado.description}
                     </div>
 
-                  </div>
+                  </div> */}
 
                   {/* <div className="flex items-center justify-between bg-purple-700 text-white rounded-lg p-2">
                     <span>{selecionado.entity}</span>
