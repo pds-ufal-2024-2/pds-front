@@ -13,7 +13,7 @@ export default function TabelaOrgaos() {
   useEffect(() => {
     async function fetchOrgaos() {
       try {
-        const res = await api.get("incidents");
+        const res = await api.get("entities");
         setOrgaos(res.data);
         console.log(res.data);
       } catch (err) {
@@ -32,32 +32,28 @@ export default function TabelaOrgaos() {
       <Table aria-label="Órgãos cadastrados" className="w-full" selectionMode="none">
         <TableHeader>
           <TableColumn className="text-center">Órgão</TableColumn>
-          <TableColumn className="text-center">Cadastrado em</TableColumn>
           <TableColumn />
         </TableHeader>
         <TableBody>
           {carregando ? (
             <TableRow>
-              <TableCell colSpan={3} className="text-center text-gray-500">
+              <TableCell colSpan={2} className="text-center text-gray-500">
                 Carregando órgãos...
               </TableCell>
             </TableRow>
           ) : orgaos.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={3} className="text-center text-red-500">
+              <TableCell colSpan={2} className="text-center text-red-500">
                 Não foi possível buscar órgãos, tente novamente mais tarde.
               </TableCell>
             </TableRow>
           ) : (
             orgaos.map((o) => (
-              <TableRow key={o.id} className="cursor-pointer hover:bg-gray-50 text-gray-500">
-                <TableCell className="text-gray-500 text-center">{o.entity}</TableCell>
-                 <TableCell className="text-gray-500 text-center">
-                    {new Date(o.created_at).toLocaleDateString('pt-BR')}
-                  </TableCell>
+              <TableRow key={o} className="cursor-pointer hover:bg-gray-50 text-gray-500">
+                <TableCell className="text-gray-500 text-center">{o}</TableCell>
                 <TableCell>
                   <button
-                    onClick={() => router.push(`/admin/orgaos/${encodeURIComponent(o.entity)}`)}
+                    onClick={() => router.push(`/admin/orgaos/${encodeURIComponent(o)}`)}
                     className="flex items-center gap-2 text-purple-600 hover:underline"
                   >
                     Acompanhar
