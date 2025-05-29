@@ -25,6 +25,7 @@ export default function ModalEditarSolicitacao({
         description: selecionado.description,
         category: selecionado.category,
         public_visibility: selecionado.public_visibility,
+        priority: selecionado.priority,
         });
 
         // Atualiza diretamente no frontend, sem esperar o backend
@@ -155,16 +156,30 @@ export default function ModalEditarSolicitacao({
           <div>
             <label className="block text-sm font-medium">Urgência</label>
             <select
-              value={selecionado.status}
-              onChange={(e) => setSelecionado({ ...selecionado, status: e.target.value })}
+              value={selecionado.priority}
+              onChange={(e) => setSelecionado({ ...selecionado, priority: e.target.value })}
               className="w-full border rounded px-3 py-2"
             >
               <option value="ALTA">Alta</option>
               <option value="MÉDIA">Média</option>
               <option value="BAIXA">Baixa</option>
-              <option value="RESOLVIDO">Resolvido</option>
             </select>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium">Status do problema</label>
+            <select
+              value={selecionado.status}
+              onChange={(e) =>
+                setSelecionado({ ...selecionado, status: e.target.value })
+              }
+              className="w-full border rounded px-3 py-2"
+            >
+              <option value="open">Pendente</option>
+              <option value="closed">Resolvido</option>
+            </select>
+          </div>
+          
           <Button
             type="submit"
             isLoading={carregando}
