@@ -18,6 +18,12 @@ const nextConfig = {
         hostname: "whippet-equipped-possum.ngrok-free.app",
         pathname: "/**",
       },
+      {
+        protocol: "http",
+        hostname: "infrazen.test",
+        port: "8080",
+        pathname: "/storage/photos/**",
+      }
     ],
   },
 
