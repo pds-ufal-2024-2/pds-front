@@ -68,7 +68,6 @@ export default function TabelaSolicitacoes() {
       setCarregando(false);
     }
   }
-
   fetchSolicitacoes();
 }, []);
 
