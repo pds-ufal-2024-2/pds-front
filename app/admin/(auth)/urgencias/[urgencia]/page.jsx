@@ -68,11 +68,11 @@ export default function HistoricoPage() {
         <h1 className="text-2xl font-semibold">
           Histórico da Ocorrência {nomeUrgencia}
         </h1>
-        <div className="flex items-center gap-2 cursor-pointer hover:bg-purple-700" onClick={() => router.push('/admin/urgencias')}>
+        <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-200 px-2" onClick={() => router.push('/admin/urgencias')}>
           <ArrowLeftIcon
-            className="h-6 w-6 text-black cursor-pointer hover:text-purple-700"
+            className="h-6 w-6 text-black cursor-pointer"
           />
-          <h1 className="text-black hover:text-gray-200 text-xl">Voltar</h1>
+          <h1 className="text-black text-xl">Voltar</h1>
         </div>
       </div>
 

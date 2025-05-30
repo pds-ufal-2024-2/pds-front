@@ -38,16 +38,16 @@ export default function AdminPage() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Gráfico de barras */}
         <Card className="flex-1 w-full h-[350px]">
-          <CardHeader className="flex items-center gap-2 text-purple-700">
+          <CardHeader className="flex items-center gap-2 text-purple-700 justify-center">
             <MapPinIcon className="h-6 w-6" />
-            <h1 className="text-lg">Casos por bairro(clique no bairro para visualizar o gráfico ao lado).</h1>
+            <h1 className="text-lg">Casos por bairro</h1>
           </CardHeader>
           <GraficoSolicitacoesBairro onSelectBairro={setBairroSelecionado} />
         </Card>
 
         {/* Resumo bairro */}
         <Card className="w-full lg:w-[280px] flex items-center justify-center">
-          <ResumoBairro bairro={bairroSelecionado} />
+          <ResumoBairro />
         </Card>
       </div>
     </div>

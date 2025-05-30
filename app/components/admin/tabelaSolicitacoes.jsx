@@ -93,23 +93,36 @@ export default function TabelaSolicitacoes() {
     return lista;
   };
 
-  const gerarRelatorio = async (incident) => {
+  const gerarRelatorio = async (listaIncidentes) => {
     try {
-      const history = incident.history || [];
-      const suggestions = incident.suggestions || " ";
+      const payload = listaIncidentes.map((incident) => {
+        const history = Array.isArray(incident.history) ? incident.history : [];
+        const suggestions = Array.isArray(incident.suggestions) ? incident.suggestions : [];
+        const codigo = incident.code || "";
 
-      const andamentos = history.map((h, i) => ({
-        data: new Date(h.created_at).toLocaleString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }).replace(',', ''),
-        descricao: h.message,
-        sugestao: suggestions || "",
-      }));
+        const andamentos = history.length > 0
+          ? history.map((h, i) => ({
+              codigo: codigo,
+              data: new Date(h.created_at).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              }),
+              descricao: h.message,
+              sugestao: suggestions[i] || "",
+            }))
+          : [{
+              codigo: codigo,
+              data: new Date().toLocaleDateString('pt-BR'),
+              descricao: incident.description || "Sem descrição detalhada",
+              sugestao: suggestions[0] || "Sem sugestão",
+            }];
+
+        return {
+          ocorrencia: incident.incident || "Ocorrência sem título",
+          andamentos: andamentos,
+        };
+      });
 
       const response = await fetch(
         "https://byjbkzggqnddlegim2kc2tdeoy0nbhyu.lambda-url.sa-east-1.on.aws/",
@@ -118,7 +131,7 @@ export default function TabelaSolicitacoes() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ andamentos }),
+          body: JSON.stringify(payload),
         }
       );
 
@@ -219,7 +232,7 @@ export default function TabelaSolicitacoes() {
                   <TableColumn className="px-4 py-2 text-center">Levantamento</TableColumn>
                   <TableColumn className="px-4 py-2 text-center">Urgência</TableColumn>
                   <TableColumn className="px-4 py-2 text-center">Editar</TableColumn>
-                  <TableColumn className="px-4 py-2 text-center">Gerar relatório</TableColumn>
+                  {/* <TableColumn className="px-4 py-2 text-center">Gerar relatório</TableColumn> */}
                   <TableColumn className="px-4 py-2 text-center">Visualizar Histórico</TableColumn>
                 </TableHeader>
                 <TableBody className="divide-y divide-gray-200 text-center">
@@ -233,7 +246,7 @@ export default function TabelaSolicitacoes() {
                       )
                   ).map((s) => (
                       <TableRow key={s.id} onClick={() => setSelecionado(s)} className="cursor-pointer hover:bg-gray-100">
-                        <TableCell className="px-4 py-2">{s.code}</TableCell>
+                        <TableCell className="px-4 py-2 text-center">{s.code}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{s.incident}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{s.category}</TableCell>
                         <TableCell className="px-4 py-2 text-center">{formatarData(s.created_at)}</TableCell>
@@ -276,7 +289,7 @@ export default function TabelaSolicitacoes() {
                             />
                           </div>
                         </TableCell> */}
-                        <TableCell className="px-4 py-2 text-center">
+                        {/* <TableCell className="px-4 py-2 text-center">
                           <div className="flex gap-2 justify-center">
                             <ArrowTopRightOnSquareIcon 
                               className="h-5 w-5 text-black hover:text-purple-700 cursor-pointer" 
@@ -286,7 +299,7 @@ export default function TabelaSolicitacoes() {
                               }}
                             />
                           </div>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell className="px-4 py-2 text-center">
                           <div className="flex gap-2 justify-center">
                             <ClockIcon 
@@ -306,6 +319,16 @@ export default function TabelaSolicitacoes() {
               </Table>
             </div>
             )}
+          </div>
+          <div 
+            className="flex gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 mt-4 rounded cursor-pointer w-1/6 items-center justify-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              gerarRelatorio(solicitacoes);
+            }}
+          >
+            <ArrowTopRightOnSquareIcon className="h-7 w-7"/>
+            <h1 className="text-lg">Gerar Relatório</h1>
           </div>
         </div>
 

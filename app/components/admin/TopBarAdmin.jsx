@@ -43,9 +43,9 @@ export default function TopbarAdmin() {
         <h2 className='text-2xl font-bold text-primary'>InfraZen</h2>
       </div>
       <div className="flex items-center gap-4">
-        <Button isIconOnly color='primary' variant='light'>
+        {/* <Button isIconOnly color='primary' variant='light'>
           <BellIcon className="w-6 h-6" />
-        </Button>
+        </Button> */}
         <Button isIconOnly color='primary' variant='light'>
           <ArrowRightEndOnRectangleIcon className="w-6 h-6" onClick={handleLogout}/>
         </Button>
